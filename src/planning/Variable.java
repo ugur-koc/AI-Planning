@@ -6,16 +6,27 @@ public class Variable {
 	private String name;
 	private String value;
 	private String returnType;
-	private Parameter[] parameters;
+	private String[] parameters;
 	private ArrayList<String> domain;
 
-	public Variable(String name, Parameter[] parameters, ArrayList<String> domain, String value, String returnType) {
+	public Variable(String name, String[] parameters, ArrayList<String> domain, String value, String returnType) {
 		super();
 		this.name = name;
 		this.parameters = parameters;
 		this.domain = domain;
 		this.value = value;
 		this.returnType = returnType;
+	}
+
+	public Variable(Variable other, String param, String value) {
+		super();
+		name = other.name;
+		this.value = value;
+		returnType = other.returnType;
+		for (int i = 0; i < parameters.length; i++)
+			parameters[i] = other.parameters[i];
+		for (String string : domain)
+			domain.add(string);
 	}
 
 	public String getName() {
@@ -30,7 +41,7 @@ public class Variable {
 		return returnType;
 	}
 
-	public Parameter[] getParameters() {
+	public String[] getParameters() {
 		return parameters;
 	}
 
@@ -40,16 +51,5 @@ public class Variable {
 
 	public void updateValue(String val) {
 		value = val;
-	}
-}
-
-class Parameter {
-	public String type;
-	public String name;
-
-	public Parameter(String type, String name) {
-		super();
-		this.type = type;
-		this.name = name;
 	}
 }

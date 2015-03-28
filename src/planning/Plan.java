@@ -2,7 +2,7 @@ package planning;
 
 import java.util.ArrayList;
 
-class Plan {
+public class Plan {
 	private ArrayList<Action> actions;
 
 	public Plan(ArrayList<Action> actions) {

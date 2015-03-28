@@ -17,15 +17,15 @@ public class StateTransitionSystem {
 	public State transition(State s, Action a) {
 		if (stateMap.containsKey(s.hashCode()))
 
-		for (Variable variable : a.getEffects())
+		for (Condition variable : a.getEffects())
 			updateVariable(variable, s);
 		return s;
 	}
 
-	public void updateVariable(Variable v, State s) {
+	public void updateVariable(Condition v, State s) {
 		ArrayList<Variable> variables = s.getVariables();
 		for (Variable variable : variables)
-			if (variable.getName().equals(v.getName())) {
+			if (variable.getName().equals(v.getVariable().getName())) {
 				variable.updateValue(v.getValue());
 				break;
 			}
