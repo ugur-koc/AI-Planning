@@ -1,6 +1,7 @@
 package planning;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 public class Planner {
@@ -21,10 +22,10 @@ public class Planner {
 		State s = problem.getInitialState();
 		while (true) {
 			if (Helper.satifies(s, problem.getGoalState())) return plan;
-			ArrayList<Action> applicable = Helper.getApplicableActions(s, problem.getSystem().getActionList());
-			if (applicable.size() == 0) { throw new NoPlanException("No applicable action found!"); }
-			Action a = applicable.get(random.nextInt(applicable.size()));
-			s = problem.getSystem().transition(s, a);// TODO
+			HashMap<String, Action> applicableActions = Helper.getApplicableActions(s, problem);
+			if (applicableActions.size() == 0) { throw new NoPlanException("No applicable action found!"); }
+			Action a = applicableActions.get(random.nextInt(applicableActions.size()));//TODO 
+			s = problem.getSystem().transition(s, a);
 			plan.addAction(a);
 		}
 	}
@@ -34,10 +35,10 @@ public class Planner {
 		State s = problem.getInitialState();
 		while (true) {
 			if (Helper.satifies(s, problem.getGoalState())) return plan;
-			ArrayList<Action> applicable = Helper.getApplicableActions(s, problem.getSystem().getActionList());
+			HashMap<String, Action> applicable = Helper.getApplicableActions(s, problem);
 			if (applicable.size() == 0) { throw new NoPlanException("No applicable action found!"); }
-			Action a = applicable.get(random.nextInt(applicable.size()));
-			s = problem.getSystem().transition(s, a);// TODO
+			Action a = applicable.get(random.nextInt(applicable.size()));//TODO 
+			s = problem.getSystem().transition(s, a);
 			plan.addAction(a);
 		}
 	}
@@ -46,10 +47,10 @@ public class Planner {
 		Plan plan = new Plan();
 		State s = problem.getInitialState();
 		if (Helper.satifies(s, problem.getGoalState())) return plan;
-		ArrayList<Action> applicable = Helper.getApplicableActions(s, problem.getSystem().getActionList());
+		HashMap<String, Action> applicable = Helper.getApplicableActions(s, problem);
 		while (applicable.size() != 0) {
-			Action a = applicable.get(random.nextInt(applicable.size()));
-			s = problem.getSystem().transition(s, a);// TODO
+			Action a = applicable.get(random.nextInt(applicable.size()));//TODO 
+			s = problem.getSystem().transition(s, a);
 			plan.addAction(a);
 		}
 		throw new NoPlanException("No plan found!");

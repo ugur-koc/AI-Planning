@@ -5,38 +5,38 @@ import java.util.HashMap;
 
 public class StateTransitionSystem {
 
-	HashMap<Integer, String> stateMap;
-	ArrayList<Action> actionList;
+	private HashMap<Integer, String> stateMap;
+	private ArrayList<Action> actions;
+	private ArrayList<PlanningObject> B;
+	private ArrayList<PlanningObject> Objects;
+	private ArrayList<Variable> variables;
 
-	public StateTransitionSystem(HashMap<Integer, String> stateMap, ArrayList<Action> actions) {
+	public StateTransitionSystem() {
 		super();
-		this.stateMap = stateMap;
-		actionList = actions;
+		stateMap = new HashMap<Integer, String>();
+		actions = new ArrayList<Action>();
+		B = new ArrayList<PlanningObject>();
+		Objects = new ArrayList<PlanningObject>();
+		variables = new ArrayList<Variable>();
 	}
 
 	public State transition(State s, Action a) {
-		if (stateMap.containsKey(s.hashCode()))
-
-		for (Condition variable : a.getEffects())
-			updateVariable(variable, s);
+		if (!stateMap.containsKey(s.hashCode())) stateMap.put(s.hashCode(), s.toString());
+		for (Condition condition : a.getEffects())
+			s.updateVariable(condition.getVariable(), condition.getElement(), condition.getValue());
 		return s;
-	}
-
-	public void updateVariable(Condition v, State s) {
-		ArrayList<Variable> variables = s.getVariables();
-		for (Variable variable : variables)
-			if (variable.getName().equals(v.getVariable().getName())) {
-				variable.updateValue(v.getValue());
-				break;
-			}
 	}
 
 	public HashMap<Integer, String> getStateMap() {
 		return stateMap;
 	}
 
-	public ArrayList<Action> getActionList() {
-		return actionList;
+	public ArrayList<Action> getActions() {
+		return actions;
+	}
+
+	public void addActions(Action action) {
+		actions.add(action);
 	}
 
 	public void addState(State s) {
@@ -45,5 +45,17 @@ public class StateTransitionSystem {
 
 	public String getState(State s) {
 		return stateMap.get(s.hashCode());
+	}
+
+	public ArrayList<PlanningObject> getObjects() {
+		return Objects;
+	}
+
+	public ArrayList<PlanningObject> getB() {
+		return B;
+	}
+
+	public ArrayList<Variable> getVariables() {
+		return variables;
 	}
 }

@@ -1,18 +1,28 @@
 package planning;
 
-
 public class Action {
+	private String name;
+	private int paramCount;
+	private String[] paramTypes;
+	private String[] parameters;
 	private Condition[] preconditions;
 	private Condition[] effects;
-	private String name;
-	private String[] parameters;
 
-	public Action(String name, String[] parameters, Condition[] preconditions, Condition[] effects) {
+	public Action(String name, int paramCount, String[] parameterTypes, Condition[] preconditions, Condition[] effects) {
 		super();
 		this.name = name;
-		this.parameters = parameters;
+		paramTypes = parameterTypes;
+		this.paramCount = paramCount;
 		this.preconditions = preconditions;
 		this.effects = effects;
+	}
+
+	public Action(Action other, String[] parameters) {
+		super();
+		this.name = other.name;
+		this.parameters = parameters;
+		this.preconditions = other.preconditions;
+		this.effects = other.effects;
 	}
 
 	public Condition[] getPreconditions() {
@@ -27,7 +37,11 @@ public class Action {
 		return name;
 	}
 
-	public String[] getParameters() {
-		return parameters;
+	public String[] getParameterTypes() {
+		return paramTypes;
+	}
+
+	public int getParamCount() {
+		return paramCount;
 	}
 }

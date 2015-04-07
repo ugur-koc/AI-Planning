@@ -27,6 +27,10 @@ public class Plan {
 		actions.add(a);
 	}
 
+	public void removeAction(Action a) {
+		actions.remove(a);
+	}
+
 	public ArrayList<Action> getActions() {
 		return actions;
 	}

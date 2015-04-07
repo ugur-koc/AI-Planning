@@ -1,7 +1,6 @@
 package test;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import org.junit.Test;
 
@@ -32,8 +31,7 @@ public class PlanningTests {
 	}
 
 	private Problem initializeProblem1() {
-		ArrayList<PlanningObject> Objects = new ArrayList<PlanningObject>();
-		ArrayList<PlanningObject> B = new ArrayList<PlanningObject>();
+		StateTransitionSystem system = new StateTransitionSystem();
 		String[] names = { "Brushes", "Toys", "Paintcans", "Colors", "Statuses" };
 		String[][] elements = { { "b1", "b2" }, { "ball", "block" }, { "pc1" }, { "red", "natural" },
 				{ "clean", "loaded", "used" } };
@@ -42,50 +40,47 @@ public class PlanningTests {
 		PlanningObject paintcansPO = new PlanningObject(names[2], elements[2]);
 		PlanningObject colorsPO = new PlanningObject(names[3], elements[3]);
 		PlanningObject statusesPO = new PlanningObject(names[4], elements[4]);
-		Objects.add(brushesPO);
-		Objects.add(toysPO);
-		Objects.add(paintcansPO);
-		B.add(brushesPO);
-		B.add(toysPO);
-		B.add(paintcansPO);
-		B.add(colorsPO);
-		B.add(statusesPO);
+		system.getObjects().add(brushesPO);
+		system.getObjects().add(toysPO);
+		system.getObjects().add(paintcansPO);
+		system.getB().add(brushesPO);
+		system.getB().add(toysPO);
+		system.getB().add(paintcansPO);
+		system.getB().add(colorsPO);
+		system.getB().add(statusesPO);
 		ArrayList<Variable> variables = new ArrayList<Variable>();
-		Variable cVar = new Variable("color", new String[] { names[0], names[1], names[2] }, colorsPO.getElements(),
-				null, "Colors");
-		Variable sVar = new Variable("stat", new String[] { names[0] }, statusesPO.getElements(), null, "Statuses");
+		Variable cVar = new Variable("color", new PlanningObject[] { brushesPO, toysPO, paintcansPO },
+				colorsPO.getElements(), "Colors");
+		Variable sVar = new Variable("stat", new PlanningObject[] { brushesPO }, statusesPO.getElements(), "Statuses");
 		variables.add(sVar);
 		variables.add(cVar);
 
-		ArrayList<Action> actions = new ArrayList<Action>();
-		actions.add(new Action("dip1", new String[] { names[0], names[2], names[3] }, new Condition[] {
+		system.addActions(new Action("dip1", 3, new String[] { names[0], names[2], names[3] }, new Condition[] {
 				new Condition(sVar, "Brushes", "clean"), new Condition(cVar, "Paintcans", "c") }, new Condition[] {
 				new Condition(sVar, "Brushes", "loaded"), new Condition(cVar, "Brushes", "c") }));
 
-		actions.add(new Action("dip2", new String[] { names[0], names[2], names[3] }, new Condition[] {
+		system.addActions(new Action("dip2", 3, new String[] { names[0], names[2], names[3] }, new Condition[] {
 				new Condition(cVar, "Brushes", "c"), new Condition(cVar, "Paintcans", "c") },
 				new Condition[] { new Condition(sVar, "Brushes", "loaded") }));
 
-		actions.add(new Action("paint", new String[] { names[0], names[1], names[3] }, new Condition[] {
+		system.addActions(new Action("paint", 3, new String[] { names[0], names[1], names[3] }, new Condition[] {
 				new Condition(sVar, "Brushes", "loaded"), new Condition(cVar, "Paintcans", "c") }, new Condition[] {
 				new Condition(cVar, "Brushes", "c"), new Condition(cVar, "Brushes", "c") }));
 
-		ArrayList<Variable> s0Vars = new ArrayList<Variable>();
-		s0Vars.add(new Variable(cVar, "ball", "natural"));
-		s0Vars.add(new Variable(cVar, "block", "natural"));
-		s0Vars.add(new Variable(cVar, "pc1", "red"));
-		s0Vars.add(new Variable(cVar, "b1", "natural"));
-		s0Vars.add(new Variable(cVar, "b2", "natural"));
-		s0Vars.add(new Variable(sVar, "b1", "clean"));
-		s0Vars.add(new Variable(sVar, "b2", "clean"));
-		State s0 = new State(s0Vars);
+		State s0 = new State();
+		s0.addVariable(cVar, "ball", "natural");
+		s0.addVariable(cVar, "block", "natural");
+		s0.addVariable(cVar, "pc1", "red");
+		s0.addVariable(cVar, "b1", "natural");
+		s0.addVariable(cVar, "b2", "natural");
+		s0.addVariable(sVar, "b1", "clean");
+		s0.addVariable(sVar, "b2", "clean");
 
-		ArrayList<Variable> goalVars = new ArrayList<Variable>();
-		goalVars.add(new Variable(cVar, "ball", "red"));
-		goalVars.add(new Variable(cVar, "block", "red"));
+		State g = new State();
+		g.addVariable(cVar, "ball", "natural");
+		g.addVariable(cVar, "block", "natural");
 
-		HashMap<Integer, String> stateMap = new HashMap<Integer, String>();
-		stateMap.put(s0.hashCode(), s0.toString());
-		return new Problem(new StateTransitionSystem(stateMap, actions), s0, new State(goalVars));
+		system.getStateMap().put(s0.hashCode(), s0.toString());
+		return new Problem(system, s0, g);
 	}
 }
