@@ -1,11 +1,14 @@
 package test;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 import org.junit.Test;
 
 import planning.Action;
-import planning.Condition;
 import planning.Plan;
 import planning.Planner;
 import planning.PlanningObject;
@@ -13,6 +16,7 @@ import planning.Problem;
 import planning.State;
 import planning.StateTransitionSystem;
 import planning.Variable;
+import exceptions.NoVariableException;
 
 public class PlanningTests {
 
@@ -25,62 +29,65 @@ public class PlanningTests {
 
 	@Test
 	public void testPlanFromFile() throws Exception {
-		Problem problem = new Problem(null, null, null);// Helper.parseInputFile("sample_csv_input.txt");
+		// Helper.parseInputFile("sample_csv_input.txt");
+		Problem problem = new Problem(null, null, null);
 		Plan plan = Planner.solve(problem, "AStar");
 		System.out.println(plan.toString());
 	}
 
-	private Problem initializeProblem1() {
-		StateTransitionSystem system = new StateTransitionSystem();
+	private Problem initializeProblem1() throws NoVariableException {
+		HashMap<String, Set<PlanningObject>> B = new HashMap<String, Set<PlanningObject>>();
 		String[] names = { "Brushes", "Toys", "Paintcans", "Colors", "Statuses" };
-		String[][] elements = { { "b1", "b2" }, { "ball", "block" }, { "pc1" }, { "red", "natural" },
+		String[][] elt = { { "b1", "b2" }, { "ball", "block" }, { "pc1" }, { "red", "natural" },
 				{ "clean", "loaded", "used" } };
-		PlanningObject brushesPO = new PlanningObject(names[0], elements[0]);
-		PlanningObject toysPO = new PlanningObject(names[1], elements[1]);
-		PlanningObject paintcansPO = new PlanningObject(names[2], elements[2]);
-		PlanningObject colorsPO = new PlanningObject(names[3], elements[3]);
-		PlanningObject statusesPO = new PlanningObject(names[4], elements[4]);
-		system.getObjects().add(brushesPO);
-		system.getObjects().add(toysPO);
-		system.getObjects().add(paintcansPO);
-		system.getB().add(brushesPO);
-		system.getB().add(toysPO);
-		system.getB().add(paintcansPO);
-		system.getB().add(colorsPO);
-		system.getB().add(statusesPO);
+		for (int i = 0; i < names.length; i++) {
+			Set<PlanningObject> planningObjects = new HashSet<PlanningObject>();
+			for (int j = 0; j < elt[i].length; j++)
+				planningObjects.add(new PlanningObject(names[i], elt[i][j]));
+			B.put(names[i], planningObjects);
+		}
 		ArrayList<Variable> variables = new ArrayList<Variable>();
-		Variable cVar = new Variable("color", new PlanningObject[] { brushesPO, toysPO, paintcansPO },
-				colorsPO.getElements(), "Colors");
-		Variable sVar = new Variable("stat", new PlanningObject[] { brushesPO }, statusesPO.getElements(), "Statuses");
-		variables.add(sVar);
-		variables.add(cVar);
+		variables.add(new Variable("color", 1, new String[] { "Brushes", "Toys", "Paintcans" }, null, null));
+		variables.add(new Variable("stat", 1, new String[] { "Brushes" }, null, null));
 
-		system.addActions(new Action("dip1", 3, new String[] { names[0], names[2], names[3] }, new Condition[] {
-				new Condition(sVar, "Brushes", "clean"), new Condition(cVar, "Paintcans", "c") }, new Condition[] {
-				new Condition(sVar, "Brushes", "loaded"), new Condition(cVar, "Brushes", "c") }));
+		ArrayList<Action> actions = new ArrayList<Action>();
+		ArrayList<Variable> preCond = new ArrayList<Variable>();
+		ArrayList<Variable> effects = new ArrayList<Variable>();
+		actions.add(new Action("dip1", 3, new String[] { "Brushes", "Paintcans", "Colors" }, null, preCond, effects));
+		actions.add(new Action("dip2", 3, new String[] { "Brushes", "Paintcans", "Colors" }, null, null, null));
+		actions.add(new Action("paint", 3, new String[] { "Brushes", "Toys", "Colors" }, null, null, null));
 
-		system.addActions(new Action("dip2", 3, new String[] { names[0], names[2], names[3] }, new Condition[] {
-				new Condition(cVar, "Brushes", "c"), new Condition(cVar, "Paintcans", "c") },
-				new Condition[] { new Condition(sVar, "Brushes", "loaded") }));
+		StateTransitionSystem system = new StateTransitionSystem(actions, variables, B);
+		State s0 = new State(system.enumerateAllVariables(variables));
 
-		system.addActions(new Action("paint", 3, new String[] { names[0], names[1], names[3] }, new Condition[] {
-				new Condition(sVar, "Brushes", "loaded"), new Condition(cVar, "Paintcans", "c") }, new Condition[] {
-				new Condition(cVar, "Brushes", "c"), new Condition(cVar, "Brushes", "c") }));
+		Iterator<PlanningObject> iterator = system.getObjectMap().get("Toys").iterator();
+		iterator.next().addAttribute("color", "natural");
+		iterator.next().addAttribute("color", "natural");
 
-		State s0 = new State();
-		s0.addVariable(cVar, "ball", "natural");
-		s0.addVariable(cVar, "block", "natural");
-		s0.addVariable(cVar, "pc1", "red");
-		s0.addVariable(cVar, "b1", "natural");
-		s0.addVariable(cVar, "b2", "natural");
-		s0.addVariable(sVar, "b1", "clean");
-		s0.addVariable(sVar, "b2", "clean");
+		iterator = system.getObjectMap().get("Paintcans").iterator();
+		iterator.next().addAttribute("color", "red");
 
-		State g = new State();
-		g.addVariable(cVar, "ball", "natural");
-		g.addVariable(cVar, "block", "natural");
+		iterator = system.getObjectMap().get("Brushes").iterator();
+		while (iterator.hasNext()) {
+			PlanningObject po = iterator.next();
+			po.addAttribute("color", "natural");
+			po.addAttribute("stat", "clean");
+		}
 
-		system.getStateMap().put(s0.hashCode(), s0.toString());
+		ArrayList<Variable> gVariables = new ArrayList<Variable>();
+		ArrayList<PlanningObject> planningObjects = new ArrayList<PlanningObject>();
+		PlanningObject e = new PlanningObject("Toys", "ball");
+		e.addAttribute("color", "red");
+		planningObjects.add(e);
+		gVariables.add(new Variable("color", 1, new String[] { "Toys" }, planningObjects, null));
+		ArrayList<PlanningObject> planningObjects2 = new ArrayList<PlanningObject>();
+		PlanningObject e2 = new PlanningObject("Toys", "ball");
+		e2.addAttribute("color", "red");
+		planningObjects.add(e2);
+		gVariables.add(new Variable("color", 1, new String[] { "Toys" }, planningObjects2, null));
+		State g = new State(gVariables);
+
+		system.getStateMap().put(s0.toString().hashCode(), s0.toString());
 		return new Problem(system, s0, g);
 	}
 }

@@ -1,35 +1,41 @@
 package planning;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Action {
 	private String name;
 	private int paramCount;
 	private String[] paramTypes;
-	private String[] parameters;
-	private Condition[] preconditions;
-	private Condition[] effects;
+	private List<PlanningObject> parameters;
+	private ArrayList<Variable> preconditions;
+	private ArrayList<Variable> effects;
 
-	public Action(String name, int paramCount, String[] parameterTypes, Condition[] preconditions, Condition[] effects) {
-		super();
+	public Action(String name, int paramCount, String[] paramTypes, ArrayList<PlanningObject> parameters,
+			ArrayList<Variable> preconditions, ArrayList<Variable> effects) {
 		this.name = name;
-		paramTypes = parameterTypes;
 		this.paramCount = paramCount;
+		this.paramTypes = paramTypes;
+		this.parameters = parameters;
 		this.preconditions = preconditions;
 		this.effects = effects;
 	}
 
-	public Action(Action other, String[] parameters) {
+	public Action(Action other, List<PlanningObject> parameters) {
 		super();
 		this.name = other.name;
+		this.paramCount = other.paramCount;
+		this.paramTypes = other.paramTypes;
 		this.parameters = parameters;
 		this.preconditions = other.preconditions;
 		this.effects = other.effects;
 	}
 
-	public Condition[] getPreconditions() {
+	public ArrayList<Variable> getPreconditions() {
 		return preconditions;
 	}
 
-	public Condition[] getEffects() {
+	public ArrayList<Variable> getEffects() {
 		return effects;
 	}
 
@@ -43,5 +49,13 @@ public class Action {
 
 	public int getParamCount() {
 		return paramCount;
+	}
+
+	@Override
+	public String toString() {
+		String params = "";
+		for (PlanningObject planningObject : parameters)
+			params += planningObject.toString();// TODO here
+		return name + "(" + params + ")";
 	}
 }

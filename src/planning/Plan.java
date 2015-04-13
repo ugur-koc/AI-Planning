@@ -34,4 +34,12 @@ public class Plan {
 	public ArrayList<Action> getActions() {
 		return actions;
 	}
+
+	@Override
+	public String toString() {
+		String planStr = "";
+		for (Action action : actions)
+			planStr += action.toString();
+		return planStr;
+	}
 }

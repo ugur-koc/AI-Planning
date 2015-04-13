@@ -1,8 +1,9 @@
 package planning;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Random;
+
+import exceptions.NoPlanException;
 
 public class Planner {
 	static Random random = new Random();
@@ -22,9 +23,9 @@ public class Planner {
 		State s = problem.getInitialState();
 		while (true) {
 			if (Helper.satifies(s, problem.getGoalState())) return plan;
-			HashMap<String, Action> applicableActions = Helper.getApplicableActions(s, problem);
+			ArrayList<Action> applicableActions = Helper.getApplicableActions(s, problem);
 			if (applicableActions.size() == 0) { throw new NoPlanException("No applicable action found!"); }
-			Action a = applicableActions.get(random.nextInt(applicableActions.size()));//TODO 
+			Action a = applicableActions.get(random.nextInt(applicableActions.size()));
 			s = problem.getSystem().transition(s, a);
 			plan.addAction(a);
 		}
@@ -35,9 +36,9 @@ public class Planner {
 		State s = problem.getInitialState();
 		while (true) {
 			if (Helper.satifies(s, problem.getGoalState())) return plan;
-			HashMap<String, Action> applicable = Helper.getApplicableActions(s, problem);
-			if (applicable.size() == 0) { throw new NoPlanException("No applicable action found!"); }
-			Action a = applicable.get(random.nextInt(applicable.size()));//TODO 
+			ArrayList<Action> applicableActions = Helper.getApplicableActions(s, problem);
+			if (applicableActions.size() == 0) { throw new NoPlanException("No applicable action found!"); }
+			Action a = applicableActions.get(random.nextInt(applicableActions.size()));
 			s = problem.getSystem().transition(s, a);
 			plan.addAction(a);
 		}
@@ -47,9 +48,9 @@ public class Planner {
 		Plan plan = new Plan();
 		State s = problem.getInitialState();
 		if (Helper.satifies(s, problem.getGoalState())) return plan;
-		HashMap<String, Action> applicable = Helper.getApplicableActions(s, problem);
-		while (applicable.size() != 0) {
-			Action a = applicable.get(random.nextInt(applicable.size()));//TODO 
+		ArrayList<Action> applicableActions = Helper.getApplicableActions(s, problem);
+		while (applicableActions.size() != 0) {
+			Action a = applicableActions.get(random.nextInt(applicableActions.size()));
 			s = problem.getSystem().transition(s, a);
 			plan.addAction(a);
 		}

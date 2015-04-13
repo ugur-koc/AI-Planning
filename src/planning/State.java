@@ -1,44 +1,41 @@
 package planning;
 
-import java.util.HashMap;
-import java.util.Map.Entry;
-import java.util.Set;
+import java.util.ArrayList;
 
 public class State {
 
-	private HashMap<String, String> assignments;
+	private ArrayList<Variable> variables;
 
-	public State() {
+	public State(ArrayList<Variable> variables) {
 		super();
-		assignments = new HashMap<String, String>();
+		this.variables = variables;
 	}
 
 	public String toString() {
-		String rslt = "{";
-		Set<Entry<String, String>> entrySet = assignments.entrySet();
-		// TODO maybe not sorted
-		for (Entry<String, String> entry : entrySet)
-			rslt += entry.getKey() + ":" + entry.getValue();
-		return rslt + "}";
+		String variableStr = "";
+		for (Variable variable : variables)
+			variableStr += variable + ",";
+		return "{" + variableStr.substring(0, variableStr.length() - 1) + "}";
 	}
 
-	public String getValueOf(Variable v, String param) {
-		return assignments.get(v.getName() + ":" + param);
+	public String getValueOf(Variable v) {
+		for (Variable variable : variables)
+			if (variable.getName().equals(v.getName())) return (String) variable.apply();// TODO
+		return null;
 	}
 
-	public String getValueOf(String key) {
-		return assignments.get(key);
+	public void updateVariable(Variable v) {
+		for (Variable variable : variables)
+			if (variable.getSignature().equals(v.getSignature())) {
+				variable = v;
+				break;
+			}
 	}
 
-	public void updateVariable(Variable v, String param, String value) {
-		assignments.put(v.getName() + ":" + param, value);
+	public ArrayList<Variable> getVariables() {
+		return variables;
 	}
 
-	public void addVariable(Variable v, String param, String value) {
-		assignments.put(v.getName() + ":" + param, value);
-	}
-
-	public HashMap<String, String> getAssignments() {
-		return assignments;
+	public void updateObject(String string, String string2, String string3) {
 	}
 }
