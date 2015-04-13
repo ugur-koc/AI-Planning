@@ -1,4 +1,4 @@
-package planning;
+package planning.core;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,8 +22,7 @@ public class StateTransitionSystem {
 		variables = new ArrayList<Variable>();
 	}
 
-	public StateTransitionSystem(ArrayList<Action> actions, ArrayList<Variable> variables,
-			HashMap<String, Set<PlanningObject>> objects) {
+	public StateTransitionSystem(ArrayList<Action> actions, HashMap<String, Set<PlanningObject>> objects) {
 		stateMap = new HashMap<Integer, String>();
 		this.objectMap = objects;
 		this.actions = enumerateAllActions(actions);

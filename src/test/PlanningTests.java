@@ -8,14 +8,14 @@ import java.util.Set;
 
 import org.junit.Test;
 
-import planning.Action;
-import planning.Plan;
-import planning.Planner;
-import planning.PlanningObject;
-import planning.Problem;
-import planning.State;
-import planning.StateTransitionSystem;
-import planning.Variable;
+import planning.core.Action;
+import planning.core.Plan;
+import planning.core.Planner;
+import planning.core.PlanningObject;
+import planning.core.Problem;
+import planning.core.State;
+import planning.core.StateTransitionSystem;
+import planning.core.Variable;
 import exceptions.NoVariableException;
 
 public class PlanningTests {
@@ -46,19 +46,18 @@ public class PlanningTests {
 				planningObjects.add(new PlanningObject(names[i], elt[i][j]));
 			B.put(names[i], planningObjects);
 		}
-		ArrayList<Variable> variables = new ArrayList<Variable>();
-		variables.add(new Variable("color", 1, new String[] { "Brushes", "Toys", "Paintcans" }, null, null));
-		variables.add(new Variable("stat", 1, new String[] { "Brushes" }, null, null));
 
 		ArrayList<Action> actions = new ArrayList<Action>();
-		ArrayList<Variable> preCond = new ArrayList<Variable>();
-		ArrayList<Variable> effects = new ArrayList<Variable>();
-		actions.add(new Action("dip1", 3, new String[] { "Brushes", "Paintcans", "Colors" }, null, preCond, effects));
-		actions.add(new Action("dip2", 3, new String[] { "Brushes", "Paintcans", "Colors" }, null, null, null));
-		actions.add(new Action("paint", 3, new String[] { "Brushes", "Toys", "Colors" }, null, null, null));
+		actions.add(new Action("dip1", 3, new String[] { names[0], names[2], names[3] }));
+		actions.add(new Action("dip2", 3, new String[] { names[0], names[2], names[3] }));
+		actions.add(new Action("paint", 3, new String[] { names[0], names[1], names[3] }));
 
-		StateTransitionSystem system = new StateTransitionSystem(actions, variables, B);
-		State s0 = new State(system.enumerateAllVariables(variables));
+		ArrayList<Variable> varDefs = new ArrayList<Variable>();
+		varDefs.add(new Variable("color", 1, new String[] { names[0], names[1], names[2] }));
+		varDefs.add(new Variable("stat", 1, new String[] { "Brushes" }));
+
+		StateTransitionSystem system = new StateTransitionSystem(actions, B);
+		State s0 = new State(system.enumerateAllVariables(varDefs));
 
 		Iterator<PlanningObject> iterator = system.getObjectMap().get("Toys").iterator();
 		iterator.next().addAttribute("color", "natural");
@@ -69,22 +68,20 @@ public class PlanningTests {
 
 		iterator = system.getObjectMap().get("Brushes").iterator();
 		while (iterator.hasNext()) {
-			PlanningObject po = iterator.next();
-			po.addAttribute("color", "natural");
-			po.addAttribute("stat", "clean");
+			PlanningObject pObject = iterator.next();
+			pObject.addAttribute("color", "natural");
+			pObject.addAttribute("stat", "clean");
 		}
 
-		ArrayList<Variable> gVariables = new ArrayList<Variable>();
-		ArrayList<PlanningObject> planningObjects = new ArrayList<PlanningObject>();
-		PlanningObject e = new PlanningObject("Toys", "ball");
-		e.addAttribute("color", "red");
-		planningObjects.add(e);
-		gVariables.add(new Variable("color", 1, new String[] { "Toys" }, planningObjects, null));
-		ArrayList<PlanningObject> planningObjects2 = new ArrayList<PlanningObject>();
-		PlanningObject e2 = new PlanningObject("Toys", "ball");
-		e2.addAttribute("color", "red");
-		planningObjects.add(e2);
-		gVariables.add(new Variable("color", 1, new String[] { "Toys" }, planningObjects2, null));
+		ArrayList<Variable> gVariables = new ArrayList<Variable>(); // TODO
+		PlanningObject p = new PlanningObject("Toys", "ball");
+		PlanningObject p2 = new PlanningObject("Toys", "block");
+		p.addAttribute("color", "red");
+		p2.addAttribute("color", "red");
+
+		gVariables.add(new Variable(new Variable("color", 1, new String[] { "Toys" }), p));
+		gVariables.add(new Variable(new Variable("color", 1, new String[] { "Toys" }), p2));
+
 		State g = new State(gVariables);
 
 		system.getStateMap().put(s0.toString().hashCode(), s0.toString());

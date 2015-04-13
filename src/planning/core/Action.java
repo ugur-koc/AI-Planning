@@ -1,4 +1,4 @@
-package planning;
+package planning.core;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,14 +11,10 @@ public class Action {
 	private ArrayList<Variable> preconditions;
 	private ArrayList<Variable> effects;
 
-	public Action(String name, int paramCount, String[] paramTypes, ArrayList<PlanningObject> parameters,
-			ArrayList<Variable> preconditions, ArrayList<Variable> effects) {
+	public Action(String name, int paramCount, String[] paramTypes) {
 		this.name = name;
 		this.paramCount = paramCount;
 		this.paramTypes = paramTypes;
-		this.parameters = parameters;
-		this.preconditions = preconditions;
-		this.effects = effects;
 	}
 
 	public Action(Action other, List<PlanningObject> parameters) {
@@ -27,8 +23,19 @@ public class Action {
 		this.paramCount = other.paramCount;
 		this.paramTypes = other.paramTypes;
 		this.parameters = parameters;
-		this.preconditions = other.preconditions;
+		this.preconditions = other.preconditions;// TODO
 		this.effects = other.effects;
+	}
+
+	public void doIt(State s) {
+		if (checkPreConditions(s)) for (Variable eff : effects)
+			s.updateVariable(eff);
+	}
+
+	public boolean checkPreConditions(State s) {
+		for (Variable pre : preconditions)
+			if (!pre.apply().equals(s.getValueOf(pre))) return false;
+		return true;
 	}
 
 	public ArrayList<Variable> getPreconditions() {

@@ -1,6 +1,11 @@
-package planning;
+package planning.utility;
 
 import java.util.ArrayList;
+
+import planning.core.Action;
+import planning.core.Problem;
+import planning.core.State;
+import planning.core.Variable;
 
 public class Helper {
 

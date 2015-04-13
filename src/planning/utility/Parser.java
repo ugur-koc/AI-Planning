@@ -1,6 +1,6 @@
-package planning2;
+package planning.utility;
 
-public class Helper2 {
+public class Parser {
 //	public static Problem parseInputFile(String string) throws Exception {
 //	HashMap<Integer, String> states = new HashMap<Integer, String>();
 //	ArrayList<Action> actions = new ArrayList<Action>();

@@ -1,8 +1,9 @@
-package planning;
+package planning.core;
 
 import java.util.ArrayList;
 import java.util.Random;
 
+import planning.utility.Helper;
 import exceptions.NoPlanException;
 
 public class Planner {

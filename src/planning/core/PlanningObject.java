@@ -1,4 +1,4 @@
-package planning;
+package planning.core;
 
 import java.util.HashMap;
 import java.util.Map.Entry;

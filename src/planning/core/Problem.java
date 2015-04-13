@@ -1,4 +1,4 @@
-package planning;
+package planning.core;
 
 public class Problem {
 	private StateTransitionSystem system;

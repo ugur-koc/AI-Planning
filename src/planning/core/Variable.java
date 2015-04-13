@@ -1,26 +1,24 @@
-package planning;
+package planning.core;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Variable {
+
 	private String name;
 	private int paramCount;
 	private String[] paramTypes;
 	private List<PlanningObject> parameters;
-	private ArrayList<String> domain;
+	private String[] domain;
 
-	public Variable(String name, int paramCount, String[] paramTypes, ArrayList<PlanningObject> parameters,
-			ArrayList<String> domain) {
+	public Variable(String name, int paramCount, String[] paramTypes) {
 		super();
 		this.name = name;
 		this.paramCount = paramCount;
-		this.parameters = parameters;
-		this.domain = domain;
 		this.paramTypes = paramTypes;
 	}
 
-	public Variable(Variable other, List<PlanningObject> parameters) {
+	public Variable(Variable other, List<PlanningObject> parameters, String value) {
 		this.name = other.name;
 		this.parameters = parameters;
 		this.paramCount = other.paramCount;
@@ -50,7 +48,7 @@ public class Variable {
 		return parameters;
 	}
 
-	public ArrayList<String> getDomain() {
+	public String[] getDomain() {
 		return domain;
 	}
 
