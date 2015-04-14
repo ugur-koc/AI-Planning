@@ -6,6 +6,7 @@ import java.util.List;
 public class Variable {
 
 	private String name;
+	private String value;
 	private int paramCount;
 	private String[] paramTypes;
 	private List<PlanningObject> parameters;
@@ -18,7 +19,7 @@ public class Variable {
 		this.paramTypes = paramTypes;
 	}
 
-	public Variable(Variable other, List<PlanningObject> parameters, String value) {
+	public Variable(Variable other, List<PlanningObject> parameters) {
 		this.name = other.name;
 		this.parameters = parameters;
 		this.paramCount = other.paramCount;
@@ -35,7 +36,15 @@ public class Variable {
 		this.domain = other.domain;
 		this.paramTypes = other.paramTypes;
 	}
-
+	
+	public Variable(Variable other, String paramType) {
+		this.name = other.name;
+		this.parameters = other.parameters;
+		this.paramCount = other.paramCount;
+		this.domain = other.domain;
+		this.paramTypes = new String[]{paramType};
+	}
+	
 	public String getName() {
 		return name;
 	}
@@ -61,6 +70,14 @@ public class Variable {
 		for (PlanningObject planningObject : parameters)
 			result += planningObject.getName() + ":" + planningObject.getType() + ",";
 		return result.substring(0, result.length() - 1);
+	}
+
+	public String getValue() {
+		return value;
+	}
+
+	public void setValue(String value) {
+		this.value = value;
 	}
 
 	public Object apply() {

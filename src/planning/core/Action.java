@@ -15,6 +15,8 @@ public class Action {
 		this.name = name;
 		this.paramCount = paramCount;
 		this.paramTypes = paramTypes;
+		preconditions = new ArrayList<Variable>();
+		effects = new ArrayList<Variable>();
 	}
 
 	public Action(Action other, List<PlanningObject> parameters) {
@@ -23,8 +25,20 @@ public class Action {
 		this.paramCount = other.paramCount;
 		this.paramTypes = other.paramTypes;
 		this.parameters = parameters;
-		this.preconditions = other.preconditions;// TODO
+		this.preconditions = generatePreConditions(parameters, other.preconditions);// TODO
 		this.effects = other.effects;
+	}
+
+	private ArrayList<Variable> generatePreConditions(List<PlanningObject> parameters, ArrayList<Variable> preconditions) {
+		ArrayList<Variable> variables = new ArrayList<Variable>();
+		for (Variable variable : preconditions) {
+			for (PlanningObject planningObject : parameters) {
+				if (planningObject.getType().equals(variable.getParamTypes()[0])) {
+					variables.add(new Variable(variable, new PlanningObject(planningObject, "", "")));// TODO
+				}
+			}
+		}
+		return null;
 	}
 
 	public void doIt(State s) {
@@ -64,5 +78,17 @@ public class Action {
 		for (PlanningObject planningObject : parameters)
 			params += planningObject.toString();// TODO here
 		return name + "(" + params + ")";
+	}
+
+	public void addPreCondition(Variable v, String value, int index) {
+		Variable variable = new Variable(v, paramTypes[index]);
+		variable.setValue(value);
+		preconditions.add(variable);
+	}
+
+	public void addEffect(Variable v, String value, int index) {
+		Variable variable = new Variable(v, paramTypes[index]);
+		variable.setValue(value);
+		effects.add(variable);
 	}
 }

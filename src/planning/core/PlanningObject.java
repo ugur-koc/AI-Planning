@@ -16,6 +16,13 @@ public class PlanningObject {
 		this.type = type;
 	}
 
+	public PlanningObject(PlanningObject other, String att, String value) {
+		super();
+		this.name = other.name;
+		this.type = other.type;
+		attributes.put(att, value);
+	}
+
 	public void addAttribute(String att, Object value) {
 		attributes.put(att, value);
 	}
