@@ -11,8 +11,8 @@ public class StateTransitionSystem {
 
 	private ArrayList<Action> actions;
 	private ArrayList<Variable> variables;
-	private HashMap<Integer, String> stateMap;
 	private HashMap<String, Set<PlanningObject>> objectMap;
+	private HashMap<Integer, String> stateMap;
 
 	public StateTransitionSystem() {
 		super();

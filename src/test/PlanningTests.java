@@ -45,26 +45,26 @@ public class PlanningTests {
 		Variable stat = new Variable("stat", 1, new String[] { names[0] });
 		varDefs.add(stat);
 
-		ArrayList<Action> actions = new ArrayList<Action>();
+		ArrayList<Action> actionsDef = new ArrayList<Action>();
 		Action dip1 = new Action("dip1", 3, new String[] { names[0], names[2], names[3] });
 		dip1.addPreCondition(stat, "clean", 0);
 		dip1.addPreCondition(color, "c", 1);
 		dip1.addEffect(stat, "loaded", 0);
 		dip1.addEffect(color, "c", 0);
-		actions.add(dip1);
+		actionsDef.add(dip1);
 		Action dip2 = new Action("dip2", 3, new String[] { names[0], names[2], names[3] });
 		dip2.addPreCondition(color, "c", 0);
 		dip2.addPreCondition(color, "c", 1);
 		dip2.addEffect(stat, "loaded", 0);
-		actions.add(dip2);
+		actionsDef.add(dip2);
 		Action paint = new Action("paint", 3, new String[] { names[0], names[1], names[3] });
 		paint.addPreCondition(stat, "loaded", 0);
 		paint.addPreCondition(color, "c", 0);
 		paint.addEffect(stat, "used", 0);
 		paint.addEffect(color, "c", 1);
-		actions.add(paint);
+		actionsDef.add(paint);
 
-		StateTransitionSystem system = new StateTransitionSystem(actions, B);
+		StateTransitionSystem system = new StateTransitionSystem(actionsDef, B);
 		State s0 = new State(system.enumerateAllVariables(varDefs));
 
 		Iterator<PlanningObject> iterator = system.getObjectMap().get("Toys").iterator();

@@ -38,7 +38,7 @@ public class Action {
 				}
 			}
 		}
-		return null;
+		return variables;
 	}
 
 	public void doIt(State s) {
