@@ -19,15 +19,13 @@ public class Helper {
 	public static boolean satifies(State s, State g) {
 		ArrayList<Variable> variables = g.getVariables();
 		for (Variable variable : variables)
-			if (!s.getValueOf(variable).equals(variable.apply())) return false;
+			if (!s.satifies(variable)) return false;
 		return true;
 	}
 
 	public static boolean satifies(State s, ArrayList<Variable> preconditions) {
-		ArrayList<Variable> variables = s.getVariables();
-		for (Variable variable : variables)
-			for (Variable cond : preconditions)
-				if (!s.getValueOf(variable).equals(cond.apply())) return false; // TODO
+		for (Variable cond : preconditions)
+			if (!s.satifies(cond)) return false;
 		return true;
 	}
 }

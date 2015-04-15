@@ -39,7 +39,7 @@ public class Plan {
 	public String toString() {
 		String planStr = "";
 		for (Action action : actions)
-			planStr += action.toString();
+			planStr += action.toString()+ "\n";
 		return planStr;
 	}
 }

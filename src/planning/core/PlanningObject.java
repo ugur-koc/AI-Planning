@@ -16,7 +16,7 @@ public class PlanningObject {
 		this.type = type;
 	}
 
-	public PlanningObject(PlanningObject other, String att, String value) {
+	public PlanningObject(PlanningObject other, String att, Object value) {
 		super();
 		this.name = other.name;
 		this.type = other.type;
@@ -35,7 +35,7 @@ public class PlanningObject {
 		return type;
 	}
 
-	public Object get(String string) { // TODO
+	public Object get(String string) {
 		return attributes.get(string);
 	}
 

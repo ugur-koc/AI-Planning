@@ -25,16 +25,21 @@ public class Action {
 		this.paramCount = other.paramCount;
 		this.paramTypes = other.paramTypes;
 		this.parameters = parameters;
-		this.preconditions = generatePreConditions(parameters, other.preconditions);// TODO
-		this.effects = other.effects;
+		this.preconditions = generateConditions(parameters, other.preconditions);
+		this.effects = generateConditions(parameters, other.effects);
 	}
 
-	private ArrayList<Variable> generatePreConditions(List<PlanningObject> parameters, ArrayList<Variable> preconditions) {
+	private ArrayList<Variable> generateConditions(List<PlanningObject> parameters, ArrayList<Variable> preconditions) {
 		ArrayList<Variable> variables = new ArrayList<Variable>();
 		for (Variable variable : preconditions) {
 			for (PlanningObject planningObject : parameters) {
 				if (planningObject.getType().equals(variable.getParamTypes()[0])) {
-					variables.add(new Variable(variable, new PlanningObject(planningObject, "", "")));// TODO
+					Object value = variable.getValue();
+					if (((String) value).contains("placeholder")) {
+						int index = Integer.parseInt(((String) value).substring(((String) value).indexOf("_") + 1)) - 1;
+						value = parameters.get(index).getName();
+					}
+					variables.add(new Variable(variable, new PlanningObject(planningObject, variable.getName(), value)));// TODO
 				}
 			}
 		}
@@ -75,8 +80,8 @@ public class Action {
 	@Override
 	public String toString() {
 		String params = "";
-		for (PlanningObject planningObject : parameters)
-			params += planningObject.toString();// TODO here
+		for (PlanningObject po : parameters)
+			params += po.toString() + " ";
 		return name + "(" + params + ")";
 	}
 
