@@ -12,6 +12,12 @@ public class State {
 		this.variables = variables;
 	}
 
+	public State(State other) {
+		variables = new ArrayList<Variable>();
+		for (Variable variable : other.getVariables())
+			variables.add(new Variable(variable, variable.getParameters()));
+	}
+
 	public String toString() {
 		String variableStr = "";
 		for (Variable variable : variables)

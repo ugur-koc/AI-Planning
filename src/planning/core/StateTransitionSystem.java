@@ -29,10 +29,11 @@ public class StateTransitionSystem {
 	}
 
 	public State transition(State s, Action a) {
+		State newState =new State(s);
 		if (!stateMap.containsKey(s.hashCode())) stateMap.put(s.toString().hashCode(), s.toString());
 		for (Variable effect : a.getEffects())
-			s.updateVariable(effect);
-		return s;
+			newState.updateVariable(effect);
+		return newState;
 	}
 
 	public HashMap<Integer, String> getStateMap() {

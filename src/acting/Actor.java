@@ -30,9 +30,7 @@ public class Actor {
 				// same in this case.
 				s = problem.getSystem().transition(s, actions.get(0));
 				plan.removeAction(actions.get(0));
-				StateTransitionSystem ST = new StateTransitionSystem();
-				Problem P = new Problem(ST, s, problem.getGoalState());
-				problem = P;
+				problem = new Problem(problem.getSystem(), s, problem.getGoalState());
 			}
 
 		}

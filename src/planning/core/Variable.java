@@ -20,11 +20,14 @@ public class Variable {
 	}
 
 	public Variable(Variable other, List<PlanningObject> parameters) {
-		this.name = other.name;
-		this.parameters = parameters;
-		this.paramCount = other.paramCount;
-		this.domain = other.domain;
-		this.paramTypes = other.paramTypes;
+		name = other.name;
+		paramCount = other.paramCount;
+		domain = other.domain;
+		paramTypes = other.paramTypes;
+		value = other.value;
+		this.parameters = new ArrayList<PlanningObject>();
+		for (PlanningObject planningObject : parameters)
+			this.parameters.add(new PlanningObject(planningObject));
 	}
 
 	public Variable(Variable other, PlanningObject parameter) {
@@ -36,15 +39,15 @@ public class Variable {
 		this.domain = other.domain;
 		this.paramTypes = other.paramTypes;
 	}
-	
+
 	public Variable(Variable other, String paramType) {
 		this.name = other.name;
 		this.parameters = other.parameters;
 		this.paramCount = other.paramCount;
 		this.domain = other.domain;
-		this.paramTypes = new String[]{paramType};
+		this.paramTypes = new String[] { paramType };
 	}
-	
+
 	public String getName() {
 		return name;
 	}

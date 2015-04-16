@@ -23,6 +23,15 @@ public class PlanningObject {
 		attributes.put(att, value);
 	}
 
+	public PlanningObject(PlanningObject planningObject) {
+		this.name = planningObject.name;
+		this.type = planningObject.type;
+		Set<Entry<String, Object>> entrySet = planningObject.attributes.entrySet();
+		for (Entry<String, Object> entry : entrySet)
+			attributes.put(entry.getKey(), entry.getValue());
+
+	}
+
 	public void addAttribute(String att, Object value) {
 		attributes.put(att, value);
 	}
