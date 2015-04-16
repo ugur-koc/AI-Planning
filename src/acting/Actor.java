@@ -1,13 +1,16 @@
 package acting;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import planning.core.Action;
 import planning.core.Plan;
 import planning.core.Planner;
+import planning.core.PlanningObject;
 import planning.core.Problem;
 import planning.core.State;
 import planning.core.StateTransitionSystem;
+import planning.core.Variable;
 import planning.utility.Helper;
 
 public class Actor {
@@ -29,11 +32,20 @@ public class Actor {
 				// the actor's transition system and planner's transition system are
 				// same in this case.
 				s = problem.getSystem().transition(s, actions.get(0));
+				applyRandomChanges(problem, s);
 				plan.removeAction(actions.get(0));
 				problem = new Problem(problem.getSystem(), s, problem.getGoalState());
 			}
 
 		}
+	}
+
+	private static void applyRandomChanges(Problem problem, State s) {
+		Random random = new Random();
+		Variable variable = s.getVariables().get(random.nextInt(s.getVariables().size()));
+		PlanningObject planningObject = variable.getParameters().get(random.nextInt(variable.getParameters().size()));
+		planningObject
+				.addAttribute(variable.getName(), variable.getDomain()[random.nextInt(variable.getDomain().length)]);
 	}
 
 	public static void ARP_interleaved(Problem problem) {
