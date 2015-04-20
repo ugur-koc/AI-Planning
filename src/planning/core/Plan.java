@@ -39,7 +39,13 @@ public class Plan {
 	public String toString() {
 		String planStr = "";
 		for (Action action : actions)
-			planStr += action.toString()+ "\n";
+			planStr += action.toString() + "\n";
 		return planStr;
+	}
+
+	public Action pop() {
+		Action act = actions.get(0);
+		actions.remove(0);
+		return act;
 	}
 }

@@ -23,4 +23,8 @@ public class Problem {
 	public State getGoalState() {
 		return goalState;
 	}
+
+	public void setInitialState(State initialState) {
+		this.initialState = initialState;
+	}
 }
