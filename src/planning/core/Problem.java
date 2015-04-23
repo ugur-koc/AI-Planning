@@ -33,5 +33,6 @@ public abstract class Problem {
 		this.initialState = initialState;
 	}
 
-	public abstract Action heuristic(ArrayList<Action> applicableActions);
+	public abstract Action heuristic(State s, Problem problem);
+	
 }

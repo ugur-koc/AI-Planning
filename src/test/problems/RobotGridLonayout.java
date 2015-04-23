@@ -12,6 +12,7 @@ import planning.core.Problem;
 import planning.core.State;
 import planning.core.StateTransitionSystem;
 import planning.core.Variable;
+import planning.utility.Helper;
 
 public class RobotGridLonayout extends Problem {
 
@@ -47,13 +48,14 @@ public class RobotGridLonayout extends Problem {
 		Variable index = new Variable("index", 1, new String[] { names[1] });
 		varDefs.add(stat);
 		varDefs.add(pos);
+		varDefs.add(index);
 
 		ArrayList<Action> actionsDef = new ArrayList<Action>();// TODO actions NOK
 		Action up = new Action("up", 3, new String[] { names[0], names[1], names[1] });
 		up.addPreCondition(stat, "empty", 1);
 		up.addPreCondition(stat, "empty", 2);
-		up.addPreCondition(index, "i", 1);
-		up.addPreCondition(index, "i+4", 2);
+		//up.addPreCondition(index, "i", 1);
+		up.addPreCondition(index, "placeholder_2 + 4", 2);
 		up.addPreCondition(pos, "placeholder_2", 0);
 		up.addEffect(stat, "empty", 1);
 		up.addEffect(stat, "occupied", 2);
@@ -122,9 +124,54 @@ public class RobotGridLonayout extends Problem {
 		goalState = g;
 	}
 
+	
 	@Override
-	public Action heuristic(ArrayList<Action> applicableActions) {
+	public Action heuristic(State s, Problem problem) {
+		ArrayList<Action> applicableActions = Helper.getApplicableActions(s, problem);
+		Action action1= applicableActions.get(0);
+		State g =problem.getGoalState();
+		PlanningObject p = new PlanningObject("Robots", "r1");
+		Variable v = new Variable(new Variable("pos", 1, new String[] {"Robots" }), p);
+		String c= g.getValueOf(v);
+		
+		
+		double e =Double.POSITIVE_INFINITY;
+				
+		for (Action action: applicableActions){
+			State r = problem.getSystem().transition(s, action);
+			PlanningObject p2 = new PlanningObject("Robots", "r1");
+			Variable v2 = new Variable(new Variable("pos", 1, new String[] {"Robots" }), p2);
+			String d= r.getValueOf(v2);
+			double e2=Distance(c,d);
+			if (e2< e) {
+				action1=action;
+				e=e2;
+			}
+		}
 
-		return applicableActions.get(0);// TODO implement the heuristic function
+		return action1;// TODO implement the heuristic function
+	}
+
+
+	private double Distance(String c, String d) {
+		// TODO Auto-generated method stub
+		int c1= Integer.parseInt(c);
+		int d1= Integer.parseInt(d);
+		int[] C1=Co_ordinate(c1);
+		int[] D1=Co_ordinate(d1);
+		return Math.pow(C1[0]-D1[0],2)+Math.pow(C1[1]-D1[1],2 );
+	}
+
+
+	private int[] Co_ordinate(int d1) {
+		// TODO parameter 'boardsize' has to be made global, here I assumed boardsize is 4.
+		
+		int y=1;
+		while (d1>4){
+			d1-=4;
+			y+=1;
+		}
+		
+		return new int[] {d1,y};
 	}
 }

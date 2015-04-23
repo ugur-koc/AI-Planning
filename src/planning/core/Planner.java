@@ -27,7 +27,7 @@ public class Planner {
 			if (Helper.satifies(s, problem.getGoalState())) return plan;
 			applicableActions = Helper.getApplicableActions(s, problem);
 			if (applicableActions.size() == 0) { throw new NoPlanException("No applicable action found!"); }
-			Action a = problem.heuristic(applicableActions);
+			Action a = problem.heuristic(s, problem);
 			s = problem.getSystem().transition(s, a);
 			plan.addAction(a);
 		}
