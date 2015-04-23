@@ -1,6 +1,5 @@
 package acting;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 import planning.core.Action;
@@ -9,7 +8,6 @@ import planning.core.Planner;
 import planning.core.PlanningObject;
 import planning.core.Problem;
 import planning.core.State;
-import planning.core.StateTransitionSystem;
 import planning.core.Variable;
 import planning.utility.Helper;
 
@@ -39,44 +37,33 @@ public class Actor {
 	// the actor's transition system and planner's
 	// transition system are same in this case.
 	public static void AP_interleaved(Problem problem) {
+		Plan plan = null;
 		State s = problem.getInitialState();
 		while (!Helper.satifies(s, problem.getGoalState())) {
-			StateTransitionSystem ST = new StateTransitionSystem();
-			Problem P = new Problem(ST, s, problem.getGoalState());
-			Plan plan = Planner.solve(P, "AStar");
-			ArrayList<Action> actions = plan.getActions();
-			s = P.getSystem().transition(s, actions.get(0));
+			plan = Planner.solve(problem, "AStar");
+			problem.setInitialState(s);
+			s = problem.getSystem().transition(s, plan.getActions().get(0));
 		}
 	}
 
+	// the actor's transition system and planner's
+	// transition system are same in this case.
 	public static void AP_mixed(Problem problem) {
-		int n = 5;
-		int i = 0;
+		int n = 5, i = 0;
 		State s = problem.getInitialState();
 		while (!Helper.satifies(s, problem.getGoalState())) {
 			Plan plan = Planner.solve(problem, "Astar");
 			while (i++ < n && Simulate(problem, s, plan, problem.getGoalState())) {
-				ArrayList<Action> actions = plan.getActions();
-				s = problem.getSystem().transition(s, actions.get(0));
-				// the actor's transition system and planner's transition system are
-				// same in this case.
-				plan.removeAction(actions.get(0));
-				StateTransitionSystem ST = new StateTransitionSystem();
-				Problem P = new Problem(ST, s, problem.getGoalState());
-				problem = P;
+				s = problem.getSystem().transition(s, plan.pop());
+				problem.setInitialState(s);
 			}
 		}
 	}
 
 	private static boolean Simulate(Problem problem, State s, Plan plan, State goalState) {
-		State g = s;
-		ArrayList<Action> actions = plan.getActions();
-		for (Action a : actions) {
-			g = problem.getSystem().transition(s, a);
-			s = g;
-		}
-		if (Helper.satifies(s, goalState)) return true;
-		else return false;
+		for (Action action : plan.getActions())
+			s = problem.getSystem().transition(s, action);
+		return Helper.satifies(s, goalState);
 	}
 
 	private static void applyRandomChanges(Problem problem, State s) {

@@ -21,12 +21,13 @@ public class Planner {
 
 	public static Plan AStar(Problem problem) throws NoPlanException {
 		Plan plan = new Plan();
+		ArrayList<Action> applicableActions = null;
 		State s = problem.getInitialState();
 		while (true) {
 			if (Helper.satifies(s, problem.getGoalState())) return plan;
-			ArrayList<Action> applicableActions = Helper.getApplicableActions(s, problem);
+			applicableActions = Helper.getApplicableActions(s, problem);
 			if (applicableActions.size() == 0) { throw new NoPlanException("No applicable action found!"); }
-			Action a = applicableActions.get(random.nextInt(applicableActions.size()));
+			Action a = problem.heuristic(applicableActions);
 			s = problem.getSystem().transition(s, a);
 			plan.addAction(a);
 		}
@@ -35,9 +36,10 @@ public class Planner {
 	public static Plan ForwardSearch(Problem problem) throws NoPlanException {
 		Plan plan = new Plan();
 		State s = problem.getInitialState();
+		ArrayList<Action> applicableActions=null;
 		while (true) {
 			if (Helper.satifies(s, problem.getGoalState())) return plan;
-			ArrayList<Action> applicableActions = Helper.getApplicableActions(s, problem);
+			applicableActions = Helper.getApplicableActions(s, problem);
 			if (applicableActions.size() == 0) { throw new NoPlanException("No applicable action found!"); }
 			Action a = applicableActions.get(random.nextInt(applicableActions.size()));
 			s = problem.getSystem().transition(s, a);
@@ -48,8 +50,9 @@ public class Planner {
 	public static Plan DepthFirstSearch(Problem problem, ArrayList<State> visited) throws NoPlanException {
 		Plan plan = new Plan();
 		State s = problem.getInitialState();
+		ArrayList<Action> applicableActions;
 		if (Helper.satifies(s, problem.getGoalState())) return plan;
-		ArrayList<Action> applicableActions = Helper.getApplicableActions(s, problem);
+		applicableActions = Helper.getApplicableActions(s, problem);
 		while (applicableActions.size() != 0) {
 			Action a = applicableActions.get(random.nextInt(applicableActions.size()));
 			s = problem.getSystem().transition(s, a);

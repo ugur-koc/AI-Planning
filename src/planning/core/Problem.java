@@ -1,9 +1,14 @@
 package planning.core;
 
-public class Problem {
-	private StateTransitionSystem system;
-	private State initialState;
-	private State goalState;
+import java.util.ArrayList;
+
+public abstract class Problem {
+	protected StateTransitionSystem system;
+	protected State initialState;
+	protected State goalState;
+
+	public Problem() {
+	}
 
 	public Problem(StateTransitionSystem stateTransitionSystem, State initialState, State goalState) {
 		super();
@@ -27,4 +32,6 @@ public class Problem {
 	public void setInitialState(State initialState) {
 		this.initialState = initialState;
 	}
+
+	public abstract Action heuristic(ArrayList<Action> applicableActions);
 }
