@@ -17,70 +17,64 @@ public class RobotGridLonayout extends Problem {
 
 	public RobotGridLonayout(int boardSize, int robotCount) {
 		HashMap<String, Set<PlanningObject>> B = new HashMap<String, Set<PlanningObject>>();
-		String[] names = { "Robots", "Cells" };
+		String[] names = { "Robots", "Cells", "Status" };
+		String[] status = { "empty", "occupied" };
 
-		String[] cells = new String[boardSize * boardSize];
 		Set<PlanningObject> cellSet = new HashSet<PlanningObject>();
-		for (String cell : cells)
-			cellSet.add(new PlanningObject(names[0], cell));
+		String[] cells = new String[boardSize * boardSize];
+		for (int i = 1; i <= cells.length; i++) {
+			cells[i] = "c" + i;
+			cellSet.add(new PlanningObject(names[0], cells[i]));
+		}
 		B.put(names[0], cellSet);
 
 		String[] robots = new String[robotCount * robotCount];
 		Set<PlanningObject> robotSet = new HashSet<PlanningObject>();
-		for (String robot : robots)
-			robotSet.add(new PlanningObject(names[1], robot));
+		for (int i = 1; i <= robots.length; i++) {
+			robots[i] = "r" + i;
+			robotSet.add(new PlanningObject(names[1], robots[i]));
+		}
 		B.put(names[1], robotSet);
 
-		ArrayList<Variable> varDefs = new ArrayList<Variable>();
-		Variable color = new Variable("status", 1, new String[] { names[1] });
-		varDefs.add(color);
-		Variable stat = new Variable("pos", 1, new String[] { names[0] });
-		varDefs.add(stat);
+		Set<PlanningObject> statusSet = new HashSet<PlanningObject>();
+		for (String string : status)
+			statusSet.add(new PlanningObject(names[2], string));
+		B.put(names[2], statusSet);
 
-		ArrayList<Action> actionsDef = new ArrayList<Action>();
-		Action dip1 = new Action("up", 3, new String[] { names[0], names[2], names[3] });
-		dip1.addPreCondition(stat, "clean", 0);
-		dip1.addPreCondition(color, "placeholder_3", 1);
-		dip1.addEffect(stat, "loaded", 0);
-		dip1.addEffect(color, "placeholder_3", 0);
-		actionsDef.add(dip1);
-		Action dip2 = new Action("dip2", 3, new String[] { names[0], names[2], names[3] });
-		dip2.addPreCondition(color, "placeholder_3", 0);
-		dip2.addPreCondition(color, "placeholder_3", 1);
-		dip2.addEffect(stat, "loaded", 0);
-		actionsDef.add(dip2);
-		Action paint = new Action("paint", 3, new String[] { names[0], names[1], names[3] });
-		paint.addPreCondition(stat, "loaded", 0);
-		paint.addPreCondition(color, "placeholder_3", 0);
-		paint.addEffect(stat, "used", 0);
-		paint.addEffect(color, "placeholder_3", 1);
-		actionsDef.add(paint);
+		ArrayList<Variable> varDefs = new ArrayList<Variable>();
+		Variable stat = new Variable("status", 1, new String[] { names[1] });
+		Variable pos = new Variable("pos", 1, new String[] { names[0] });
+		varDefs.add(stat);
+		varDefs.add(pos);
+
+		ArrayList<Action> actionsDef = new ArrayList<Action>();// TODO actions NOK
+		Action up = new Action("up", 3, new String[] { names[0], names[1], names[1] });
+		up.addPreCondition(stat, "empty", 1);
+		up.addPreCondition(pos, "placeholder_2", 0);
+		up.addEffect(stat, "empty", 1);
+		up.addEffect(stat, "occupied", 2);
+		actionsDef.add(up);
 
 		StateTransitionSystem system = new StateTransitionSystem(actionsDef, B);
 		State s0 = new State(system.enumerateAllVariables(varDefs));
 
-		Iterator<PlanningObject> iterator = system.getObjectMap().get("Toys").iterator();
-		iterator.next().addAttribute("color", "natural");
-		iterator.next().addAttribute("color", "natural");
+		Iterator<PlanningObject> iterator = system.getObjectMap().get("Robots").iterator();
+		iterator.next().addAttribute("pos", "c1");
+		iterator.next().addAttribute("pos", "c4");
 
-		iterator = system.getObjectMap().get("Paintcans").iterator();
-		iterator.next().addAttribute("color", "red");
-
-		iterator = system.getObjectMap().get("Brushes").iterator();
+		iterator = system.getObjectMap().get("Cells").iterator();
 		while (iterator.hasNext()) {
 			PlanningObject pObject = iterator.next();
-			pObject.addAttribute("color", "natural");
-			pObject.addAttribute("stat", "clean");
+			if (pObject.getName().equals("c1") || pObject.getName().equals("c4"))
+				pObject.addAttribute("stat", "occupied");
+			pObject.addAttribute("stat", "empty");
 		}
 
 		ArrayList<Variable> gVariables = new ArrayList<Variable>(); // TODO
-		PlanningObject p = new PlanningObject("Toys", "ball");
-		PlanningObject p2 = new PlanningObject("Toys", "block");
-		p.addAttribute("color", "red");
-		p2.addAttribute("color", "red");
+		PlanningObject p = new PlanningObject(names[0], "r1");
+		p.addAttribute("pos", "c16");
 
 		gVariables.add(new Variable(new Variable("color", 1, new String[] { "Toys" }), p));
-		gVariables.add(new Variable(new Variable("color", 1, new String[] { "Toys" }), p2));
 
 		State g = new State(gVariables);
 

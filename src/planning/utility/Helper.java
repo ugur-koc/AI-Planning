@@ -1,5 +1,8 @@
 package planning.utility;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
 import planning.core.Action;
@@ -27,5 +30,12 @@ public class Helper {
 		for (Variable cond : preconditions)
 			if (!s.satifies(cond)) return false;
 		return true;
+	}
+
+	public static void writeFile(String path, String str, boolean append) throws IOException {
+		OutputStreamWriter stadFile1 = new OutputStreamWriter(new FileOutputStream(path, append), "UTF-8");
+		stadFile1.write(str);
+		stadFile1.flush();
+		stadFile1.close();
 	}
 }

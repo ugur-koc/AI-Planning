@@ -1,0 +1,25 @@
+Robots={r1,r2}
+Cells={c1,c2, ..., c16}
+Indexes={1,2,3, ... 16}
+Statuses={empty,occupied}
+B=RobotsUCellsUStatusesUIndexes
+
+StateVariables
+stat(c:Cells)
+Dom(stat(c))=Statuses
+pos(r:Robots)
+Dom(pos(r))=Cells
+index(c:Cells)
+Dom(index(c))=Indexes
+
+Actions
+up(r:Robots,c1:Cells,c2:Cells)
+Pre:pos(r)=c1,stat(c2)=empty,index(c2)<=13
+Eff:pos(r)=c2,stat(c2)=occupied, stat(c2)=empty
+.
+.
+.
+
+
+s0={...}
+g={...}
