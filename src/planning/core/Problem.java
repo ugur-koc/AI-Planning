@@ -1,6 +1,5 @@
 package planning.core;
 
-import java.util.ArrayList;
 
 public abstract class Problem {
 	protected StateTransitionSystem system;

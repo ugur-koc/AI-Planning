@@ -13,6 +13,7 @@ import planning.core.Problem;
 import planning.core.State;
 import planning.core.StateTransitionSystem;
 import planning.core.Variable;
+import planning.utility.Helper;
 
 public class Coloring extends Problem {
 	static Random random = new Random();
@@ -89,7 +90,8 @@ public class Coloring extends Problem {
 	}
 
 	@Override
-	public Action heuristic(ArrayList<Action> applicableActions) {
+	public Action heuristic(State s, Problem problem) {
+		ArrayList<Action> applicableActions = Helper.getApplicableActions(s, problem);
 		return applicableActions.get(random.nextInt(applicableActions.size()));
 	}
 }
