@@ -17,7 +17,7 @@ import acting.Actor;
 public class Experiment {
 
 	public static void main(String[] args) throws IOException {
-		int dynamicities[] = { 1, 2, 3, 4, 5 };
+		int dynamicities[] = { 0, 1, 2, 3, 4, 5 }; // 0 zero means no dynamicity
 		String[] planningAlgs = { "AStar", "DFS", "FS" }, refMethods = { "AP_lazy", "AP_interleaved", "AP_mixed" };
 		RobotGridLonayout[] problems = { new RobotGridLonayout(3, 2), new RobotGridLonayout(4, 2) };
 
