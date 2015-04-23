@@ -44,17 +44,55 @@ public class RobotGridLonayout extends Problem {
 		ArrayList<Variable> varDefs = new ArrayList<Variable>();
 		Variable stat = new Variable("status", 1, new String[] { names[1] });
 		Variable pos = new Variable("pos", 1, new String[] { names[0] });
+		Variable index = new Variable("index", 1, new String[] { names[1] });
 		varDefs.add(stat);
 		varDefs.add(pos);
 
 		ArrayList<Action> actionsDef = new ArrayList<Action>();// TODO actions NOK
 		Action up = new Action("up", 3, new String[] { names[0], names[1], names[1] });
 		up.addPreCondition(stat, "empty", 1);
+		up.addPreCondition(stat, "empty", 2);
+		up.addPreCondition(index, "i", 1);
+		up.addPreCondition(index, "i+4", 2);
 		up.addPreCondition(pos, "placeholder_2", 0);
 		up.addEffect(stat, "empty", 1);
 		up.addEffect(stat, "occupied", 2);
 		actionsDef.add(up);
 
+		Action down = new Action("down", 3, new String[] { names[0], names[1], names[1] });
+		down.addPreCondition(stat, "empty", 1);
+		down.addPreCondition(stat, "empty", 2);
+		down.addPreCondition(index, "i+4", 1);
+		down.addPreCondition(index, "i", 2);
+		down.addPreCondition(pos, "placeholder_2", 0);
+		down.addEffect(stat, "empty", 1);
+		down.addEffect(stat, "occupied", 2);
+		actionsDef.add(down);
+		
+		Action left = new Action("left", 3, new String[] { names[0], names[1], names[1] });
+		left.addPreCondition(stat, "empty", 1);
+		left.addPreCondition(stat, "empty", 2);
+		left.addPreCondition(index, "i+1", 1);
+		left.addPreCondition(index, "i", 2);
+		left.addPreCondition(pos, "placeholder_2", 0);
+		left.addEffect(stat, "empty", 1);
+		left.addEffect(stat, "occupied", 2);
+		actionsDef.add(left);
+		
+		Action right = new Action("right", 3, new String[] { names[0], names[1], names[1] });
+		right.addPreCondition(stat, "empty", 1);
+		right.addPreCondition(stat, "empty", 2);
+		right.addPreCondition(index, "i", 1);
+		right.addPreCondition(index, "i+1", 2);
+		right.addPreCondition(pos, "placeholder_2", 0);
+		right.addEffect(stat, "empty", 1);
+		right.addEffect(stat, "occupied", 2);
+		actionsDef.add(right);
+		
+		
+		
+		
+		
 		StateTransitionSystem system = new StateTransitionSystem(actionsDef, B);
 		State s0 = new State(system.enumerateAllVariables(varDefs));
 
