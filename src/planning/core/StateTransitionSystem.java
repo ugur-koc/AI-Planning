@@ -64,7 +64,24 @@ public class StateTransitionSystem {
 				list.add(objectMap.get(type));
 			Set<List<PlanningObject>> cartesianProduct = Sets.cartesianProduct(list);
 			for (List<PlanningObject> parameters : cartesianProduct)
-				allActions.add(new Action(action, parameters));
+				if (action.getName().equals("up")) {// Robot motion specific code
+					Integer fromIndx = (Integer) parameters.get(1).get("index");
+					Integer toIndx = (Integer) parameters.get(2).get("index");
+					if (fromIndx + 4 == toIndx) allActions.add(new Action(action, parameters));
+				} else if (action.getName().equals("down")) {
+					Integer fromIndx = (Integer) parameters.get(1).get("index");
+					Integer toIndx = (Integer) parameters.get(2).get("index");
+					if (fromIndx - 4 == toIndx) allActions.add(new Action(action, parameters));
+				} else if (action.getName().equals("left")) {
+					Integer fromIndx = (Integer) parameters.get(1).get("index");
+					Integer toIndx = (Integer) parameters.get(2).get("index");
+					if (fromIndx - 1 == toIndx) allActions.add(new Action(action, parameters));
+				} else if (action.getName().equals("right")) {
+					Integer fromIndx = (Integer) parameters.get(1).get("index");
+					Integer toIndx = (Integer) parameters.get(2).get("index");
+					if (fromIndx + 1 == toIndx) allActions.add(new Action(action, parameters));
+				} else allActions.add(new Action(action, parameters));
+
 		}
 		return allActions;
 	}

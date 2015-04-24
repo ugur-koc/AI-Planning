@@ -47,9 +47,9 @@ public class RobotGridLonayout extends Problem {
 		Variable pos = new Variable("pos", 1, new String[] { names[0] });
 		Variable index = new Variable("index", 1, new String[] { names[1] });
 		Variable tedge = new Variable("tedge", 1, new String[] { names[1] });
-		Variable bedge = new Variable("tedge", 1, new String[] { names[1] });
-		Variable ledge = new Variable("tedge", 1, new String[] { names[1] });
-		Variable redge = new Variable("tedge", 1, new String[] { names[1] });
+		Variable bedge = new Variable("bedge", 1, new String[] { names[1] });
+		Variable ledge = new Variable("ledge", 1, new String[] { names[1] });
+		Variable redge = new Variable("redge", 1, new String[] { names[1] });
 		varDefs.add(stat);
 		varDefs.add(pos);
 		varDefs.add(index);
@@ -89,13 +89,13 @@ public class RobotGridLonayout extends Problem {
 		actionsDef.add(left);
 
 		Action right = new Action("right", 3, new String[] { names[0], names[1], names[1] });
-		left.addPreCondition(stat, "empty", 2);
-		left.addPreCondition(pos, "placeholder_2", 0);
-		left.addPreCondition(redge, "no", 1);
-		left.addPreCondition(index, "placeholder_2+" + 1, 2);
-		left.addEffect(stat, "empty", 1);
-		left.addEffect(stat, "occupied", 2);
-		left.addEffect(pos, "placeholder_3", 0);
+		right.addPreCondition(stat, "empty", 2);
+		right.addPreCondition(pos, "placeholder_2", 0);
+		right.addPreCondition(redge, "no", 1);
+		right.addPreCondition(index, "placeholder_2+" + 1, 2);
+		right.addEffect(stat, "empty", 1);
+		right.addEffect(stat, "occupied", 2);
+		right.addEffect(pos, "placeholder_3", 0);
 		actionsDef.add(right);
 
 		StateTransitionSystem system = new StateTransitionSystem(actionsDef, B);
@@ -114,7 +114,7 @@ public class RobotGridLonayout extends Problem {
 
 		ArrayList<Variable> gVariables = new ArrayList<Variable>(); // TODO
 		PlanningObject p = new PlanningObject(names[0], "r1");
-		p.addAttribute("pos", "c16");
+		p.addAttribute("pos", "c36");
 
 		gVariables.add(new Variable(new Variable("pos", 1, new String[] { "Robots" }), p));
 
