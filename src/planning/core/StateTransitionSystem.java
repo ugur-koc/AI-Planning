@@ -66,24 +66,20 @@ public class StateTransitionSystem {
 				list.add(objectMap.get(type));
 			Set<List<PlanningObject>> cartesianProduct = Sets.cartesianProduct(list);
 			for (List<PlanningObject> parameters : cartesianProduct)
-				if (action.getName().equals("up")) { // Robot motion specific code
-					Integer fromIndx = (Integer) parameters.get(1).get("index");
-					Integer toIndx = (Integer) parameters.get(2).get("index");
-					if (fromIndx + RobotGridLonayout.boardSize == toIndx) allActions.add(new Action(action, parameters));
-				} else if (action.getName().equals("down")) {
-					Integer fromIndx = (Integer) parameters.get(1).get("index");
-					Integer toIndx = (Integer) parameters.get(2).get("index");
-					if (fromIndx - RobotGridLonayout.boardSize == toIndx) allActions.add(new Action(action, parameters));
-				} else if (action.getName().equals("left")) {
-					Integer fromIndx = (Integer) parameters.get(1).get("index");
-					Integer toIndx = (Integer) parameters.get(2).get("index");
-					if (fromIndx - 1 == toIndx) allActions.add(new Action(action, parameters));
-				} else if (action.getName().equals("right")) {
-					Integer fromIndx = (Integer) parameters.get(1).get("index");
-					Integer toIndx = (Integer) parameters.get(2).get("index");
-					if (fromIndx + 1 == toIndx) allActions.add(new Action(action, parameters));
-				} else allActions.add(new Action(action, parameters));
-
+				// Robot motion specific code
+				if ("updownleftrigth".contains(action.getName())) {
+					int fromIndx = Integer.parseInt((String) parameters.get(1).get("index"));
+					int toIndx = Integer.parseInt((String) parameters.get(2).get("index"));
+					if (action.getName().equals("down") && fromIndx - RobotGridLonayout.boardSize == toIndx) allActions
+							.add(new Action(action, parameters));
+					else if (action.getName().equals("up") && fromIndx + RobotGridLonayout.boardSize == toIndx) allActions
+							.add(new Action(action, parameters));
+					else if (action.getName().equals("left") && fromIndx - 1 == toIndx) allActions.add(new Action(action,
+							parameters));
+					else if (action.getName().equals("right") && fromIndx + 1 == toIndx) allActions.add(new Action(action,
+							parameters));
+				} // Robot motion specific code end
+				else allActions.add(new Action(action, parameters));
 		}
 		return allActions;
 	}

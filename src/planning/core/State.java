@@ -45,9 +45,6 @@ public class State {
 		return variables;
 	}
 
-	public void updateObject(String string, String string2, String string3) {
-	}
-
 	public boolean satifies(Variable cond) {
 		for (Variable var : variables)
 			if (var.getSignature().equals(cond.getSignature()) && var.apply().equals(cond.apply())) return true;

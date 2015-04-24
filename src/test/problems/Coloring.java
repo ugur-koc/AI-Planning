@@ -90,8 +90,7 @@ public class Coloring extends Problem {
 	}
 
 	@Override
-	public Action heuristic(State s, Problem problem) {
-		ArrayList<Action> applicableActions = Helper.getApplicableActions(s, problem);
+	public Action heuristic(State s, Problem problem, ArrayList<Action> applicableActions) {
 		return applicableActions.get(random.nextInt(applicableActions.size()));
 	}
 }

@@ -12,7 +12,6 @@ import planning.core.Problem;
 import planning.core.State;
 import planning.core.StateTransitionSystem;
 import planning.core.Variable;
-import planning.utility.Helper;
 
 public class RobotGridLonayout extends Problem {
 	public static int boardSize;
@@ -30,7 +29,7 @@ public class RobotGridLonayout extends Problem {
 		Set<PlanningObject> cellSet = new HashSet<PlanningObject>();
 		for (int i = 1; i <= boardSize * boardSize; i++) {
 			PlanningObject po = new PlanningObject(names[1], "c" + i);
-			po.addAttribute("index", new Integer(i));
+			po.addAttribute("index", "" + i);
 			po.addAttribute("tedge", (i > boardSize * (boardSize - 1)) ? "yes" : "no");
 			po.addAttribute("bedge", (i <= boardSize) ? "yes" : "no");
 			po.addAttribute("ledge", (i % boardSize == 1) ? "yes" : "no");
@@ -107,8 +106,8 @@ public class RobotGridLonayout extends Problem {
 		Iterator<PlanningObject> iterator = system.getObjectMap().get("Robots").iterator();
 		iterator.next().addAttribute("pos", "c1");
 		iterator.next().addAttribute("pos", "c4");
-		//iterator.next().addAttribute("pos", "c15");
-		//iterator.next().addAttribute("pos", "c17");
+		// iterator.next().addAttribute("pos", "c15");
+		// iterator.next().addAttribute("pos", "c17");
 
 		iterator = system.getObjectMap().get("Cells").iterator();
 		while (iterator.hasNext()) {
@@ -132,9 +131,8 @@ public class RobotGridLonayout extends Problem {
 	}
 
 	@Override
-	public Action heuristic(State s, Problem problem) {
-		ArrayList<Action> applicableActions = Helper.getApplicableActions(s, problem);
-		Action action1 = applicableActions.get(0);
+	public Action heuristic(State s, Problem problem, ArrayList<Action> applicableActions) {
+		Action candidateAction = applicableActions.get(0);
 		State g = problem.getGoalState();
 		PlanningObject p = new PlanningObject("Robots", "r1");
 		Variable v = new Variable(new Variable("pos", 1, new String[] { "Robots" }), p);
@@ -149,12 +147,12 @@ public class RobotGridLonayout extends Problem {
 			String d = r.getValueOf(v2);
 			double e2 = Distance(c, d);
 			if (e2 < e) {
-				action1 = action;
+				candidateAction = action;
 				e = e2;
 			}
 		}
 
-		return action1;// TODO implement the heuristic function
+		return candidateAction;// TODO implement the heuristic function
 	}
 
 	private double Distance(String c, String d) {

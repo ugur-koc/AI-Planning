@@ -1,5 +1,7 @@
 package planning.core;
 
+import java.util.ArrayList;
+
 
 public abstract class Problem {
 	protected StateTransitionSystem system;
@@ -32,6 +34,6 @@ public abstract class Problem {
 		this.initialState = initialState;
 	}
 
-	public abstract Action heuristic(State s, Problem problem);
+	public abstract Action heuristic(State s, Problem problem, ArrayList<Action> applicableActions);
 	
 }

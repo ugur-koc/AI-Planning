@@ -27,7 +27,7 @@ public class Planner {
 			if (Helper.satifies(s, problem.getGoalState())) return plan;
 			applicableActions = Helper.getApplicableActions(s, problem);
 			if (applicableActions.size() == 0) { throw new NoPlanException("No applicable action found!"); }
-			Action a = problem.heuristic(s, problem);
+			Action a = problem.heuristic(s, problem, applicableActions);
 			s = problem.getSystem().transition(s, a);
 			plan.addAction(a);
 		}
@@ -36,7 +36,7 @@ public class Planner {
 	public static Plan ForwardSearch(Problem problem) throws NoPlanException {
 		Plan plan = new Plan();
 		State s = problem.getInitialState();
-		ArrayList<Action> applicableActions=null;
+		ArrayList<Action> applicableActions = null;
 		while (true) {
 			if (Helper.satifies(s, problem.getGoalState())) return plan;
 			applicableActions = Helper.getApplicableActions(s, problem);

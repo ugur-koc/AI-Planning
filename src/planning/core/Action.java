@@ -36,7 +36,7 @@ public class Action {
 					if (value.contains("placeholder")) {
 						int index = Integer.parseInt(value.charAt(12) + "") - 1;
 						if (value.length() > 13) {
-							Integer fromIndex = (Integer) parameters.get(index).get(cond.getName());
+							int fromIndex = Integer.parseInt((String) parameters.get(index).get(cond.getName()));
 							int increment = Integer.parseInt(value.substring(14));
 							if (value.charAt(13) == '+') {
 								value = "" + (fromIndex + increment);
