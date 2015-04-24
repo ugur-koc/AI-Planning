@@ -21,4 +21,11 @@ public class PlanningTests {
 		Plan plan = Planner.solve(problem, "AStar");
 		System.out.println(plan.toString());
 	}
+	
+	@Test
+	public void testPlan_3() throws Exception {
+		RobotGridLonayout problem = new RobotGridLonayout(6, 2);
+		Plan plan = Planner.solve(problem, "FS");
+		System.out.println(plan.toString());
+	}
 }
