@@ -18,21 +18,22 @@ public class RobotGridLonayout extends Problem {
 
 	public RobotGridLonayout(int boardSize, int robotCount) {
 		HashMap<String, Set<PlanningObject>> B = new HashMap<String, Set<PlanningObject>>();
-		String[] names = { "Robots", "Cells", "Status" }, status = { "empty", "occupied" };
+		String[] names = { "Robots", "Cells", "Status", "Indexes", "Bool" }, status = { "empty", "occupied" };
 
-		String[] robots = new String[robotCount * robotCount];
 		Set<PlanningObject> robotSet = new HashSet<PlanningObject>();
-		for (int i = 1; i <= robots.length; i++) {
-			robots[i] = "r" + i;
-			robotSet.add(new PlanningObject(names[0], robots[i]));
-		}
+		for (int i = 1; i <= robotCount * robotCount; i++)
+			robotSet.add(new PlanningObject(names[0], "r" + i));
 		B.put(names[0], robotSet);
 
 		Set<PlanningObject> cellSet = new HashSet<PlanningObject>();
-		String[] cells = new String[boardSize * boardSize];
-		for (int i = 1; i <= cells.length; i++) {
-			cells[i] = "" + i;
-			cellSet.add(new PlanningObject(names[1], cells[i]));
+		for (int i = 1; i <= boardSize * boardSize; i++) {
+			PlanningObject po = new PlanningObject(names[1], "c" + i);
+			po.addAttribute("index", i);
+			po.addAttribute("tedge", (i > boardSize * (boardSize - 1)) ? "yes" : "no");
+			po.addAttribute("bedge", (i <= boardSize) ? "yes" : "no");
+			po.addAttribute("ledge", (i % boardSize == 1) ? "yes" : "no");
+			po.addAttribute("redge", (i % boardSize == 0) ? "yes" : "no");
+			cellSet.add(po);
 		}
 		B.put(names[1], cellSet);
 
@@ -45,69 +46,76 @@ public class RobotGridLonayout extends Problem {
 		Variable stat = new Variable("status", 1, new String[] { names[1] });
 		Variable pos = new Variable("pos", 1, new String[] { names[0] });
 		Variable index = new Variable("index", 1, new String[] { names[1] });
+		Variable tedge = new Variable("tedge", 1, new String[] { names[1] });
+		Variable bedge = new Variable("tedge", 1, new String[] { names[1] });
+		Variable ledge = new Variable("tedge", 1, new String[] { names[1] });
+		Variable redge = new Variable("tedge", 1, new String[] { names[1] });
 		varDefs.add(stat);
 		varDefs.add(pos);
 		varDefs.add(index);
-
+		varDefs.add(tedge);
+		varDefs.add(bedge);
+		varDefs.add(ledge);
+		varDefs.add(redge);
 		ArrayList<Action> actionsDef = new ArrayList<Action>();// TODO actions NOK
-		Action up = new Action("up", 3, new String[] { names[0], names[1]});
-		up.addPreCondition(stat, "empty", 1);
+		Action up = new Action("up", 3, new String[] { names[0], names[1], names[1] });
 		up.addPreCondition(stat, "empty", 2);
-		// up.addPreCondition(index, "i", 1);
-		up.addPreCondition(index, "placeholder_2 + 4", 2);
 		up.addPreCondition(pos, "placeholder_2", 0);
+		up.addPreCondition(tedge, "no", 1);
+		up.addPreCondition(index, "placeholder_2+" + boardSize, 2);
 		up.addEffect(stat, "empty", 1);
 		up.addEffect(stat, "occupied", 2);
+		up.addEffect(pos, "placeholder_3", 0);
 		actionsDef.add(up);
 
-		Action down = new Action("down", 3, new String[] { names[0], names[1]});
-		down.addPreCondition(stat, "empty", 1);
+		Action down = new Action("down", 3, new String[] { names[0], names[1], names[1] });
 		down.addPreCondition(stat, "empty", 2);
-		down.addPreCondition(index, "i+4", 1);
-		down.addPreCondition(index, "i", 2);
 		down.addPreCondition(pos, "placeholder_2", 0);
+		down.addPreCondition(bedge, "no", 1);
+		down.addPreCondition(index, "placeholder_2-" + boardSize, 2);
 		down.addEffect(stat, "empty", 1);
 		down.addEffect(stat, "occupied", 2);
+		down.addEffect(pos, "placeholder_3", 0);
 		actionsDef.add(down);
 
-		Action left = new Action("left", 3, new String[] { names[0], names[1]});
-		left.addPreCondition(stat, "empty", 1);
+		Action left = new Action("left", 3, new String[] { names[0], names[1], names[1] });
 		left.addPreCondition(stat, "empty", 2);
-		left.addPreCondition(index, "i+1", 1);
-		left.addPreCondition(index, "i", 2);
 		left.addPreCondition(pos, "placeholder_2", 0);
+		left.addPreCondition(ledge, "no", 1);
+		left.addPreCondition(index, "placeholder_2-" + 1, 2);
 		left.addEffect(stat, "empty", 1);
 		left.addEffect(stat, "occupied", 2);
+		left.addEffect(pos, "placeholder_3", 0);
 		actionsDef.add(left);
 
-		Action right = new Action("right", 3, new String[] { names[0], names[1]});
-		right.addPreCondition(stat, "empty", 1);
-		right.addPreCondition(stat, "empty", 2);
-		right.addPreCondition(index, "i", 1);
-		right.addPreCondition(index, "i+1", 2);
-		right.addPreCondition(pos, "placeholder_2", 0);
-		right.addEffect(stat, "empty", 1);
-		right.addEffect(stat, "occupied", 2);
+		Action right = new Action("right", 3, new String[] { names[0], names[1], names[1] });
+		left.addPreCondition(stat, "empty", 2);
+		left.addPreCondition(pos, "placeholder_2", 0);
+		left.addPreCondition(redge, "no", 1);
+		left.addPreCondition(index, "placeholder_2+" + 1, 2);
+		left.addEffect(stat, "empty", 1);
+		left.addEffect(stat, "occupied", 2);
+		left.addEffect(pos, "placeholder_3", 0);
 		actionsDef.add(right);
 
 		StateTransitionSystem system = new StateTransitionSystem(actionsDef, B);
 		State s0 = new State(system.enumerateAllVariables(varDefs));
 
 		Iterator<PlanningObject> iterator = system.getObjectMap().get("Robots").iterator();
-		iterator.next().addAttribute("pos", "1");
-		iterator.next().addAttribute("pos", "4");
+		iterator.next().addAttribute("pos", "c1");
+		iterator.next().addAttribute("pos", "c4");
 
 		iterator = system.getObjectMap().get("Cells").iterator();
 		while (iterator.hasNext()) {
 			PlanningObject pObject = iterator.next();
-			if (pObject.getName().equals("1") || pObject.getName().equals("4"))
+			if (pObject.getName().equals("c1") || pObject.getName().equals("c4"))
 				pObject.addAttribute("stat", "occupied");
 			pObject.addAttribute("stat", "empty");
 		}
 
 		ArrayList<Variable> gVariables = new ArrayList<Variable>(); // TODO
 		PlanningObject p = new PlanningObject(names[0], "r1");
-		p.addAttribute("pos", "16");
+		p.addAttribute("pos", "c16");
 
 		gVariables.add(new Variable(new Variable("pos", 1, new String[] { "Robots" }), p));
 
