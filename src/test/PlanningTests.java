@@ -8,6 +8,10 @@ import test.problems.Coloring;
 import test.problems.RobotGridLonayout;
 
 public class PlanningTests {
+	
+	public static void main(String[] args) throws Exception{
+		testPlan_2();
+	}
 
 	@Test
 	public void testPlan_1() throws Exception {
@@ -16,7 +20,7 @@ public class PlanningTests {
 	}
 
 	@Test
-	public void testPlan_2() throws Exception {
+	public static void testPlan_2() throws Exception {
 		RobotGridLonayout problem = new RobotGridLonayout(6, 2);
 		Plan plan = Planner.solve(problem, "AStar");
 		System.out.println(plan.toString());

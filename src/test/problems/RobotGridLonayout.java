@@ -106,7 +106,7 @@ public class RobotGridLonayout extends Problem {
 		Iterator<PlanningObject> iterator = system.getObjectMap().get("Robots").iterator();
 		iterator.next().addAttribute("pos", "c1");
 		iterator.next().addAttribute("pos", "c4");
-		// iterator.next().addAttribute("pos", "c15");
+		//iterator.next().addAttribute("pos", "c15");
 		// iterator.next().addAttribute("pos", "c17");
 
 		iterator = system.getObjectMap().get("Cells").iterator();
@@ -151,20 +151,24 @@ public class RobotGridLonayout extends Problem {
 				e = e2;
 			}
 		}
-
+        System.out.println(candidateAction);
 		return candidateAction;// TODO implement the heuristic function
 	}
-
-	private double Distance(String c, String d) {
+	
+	
+	private static double Distance(String c, String d) {
 		// TODO Auto-generated method stub
-		int c1 = Integer.parseInt(c);
-		int d1 = Integer.parseInt(d);
+		String p1=c.substring(1);
+		String q1=d.substring(1);
+		int c1 = Integer.parseInt(p1);
+		int d1 = Integer.parseInt(q1);
 		int[] C1 = Co_ordinate(c1);
 		int[] D1 = Co_ordinate(d1);
 		return Math.pow(C1[0] - D1[0], 2) + Math.pow(C1[1] - D1[1], 2);
+		
 	}
 
-	private int[] Co_ordinate(int d1) {
+	private static int[] Co_ordinate(int d1) {
 		// TODO parameter 'boardsize' has to be made global, here I assumed
 		// boardsize is 4.
 		// TODO @ugur I did that just check it
