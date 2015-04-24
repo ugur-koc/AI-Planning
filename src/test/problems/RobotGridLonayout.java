@@ -28,7 +28,7 @@ public class RobotGridLonayout extends Problem {
 		Set<PlanningObject> cellSet = new HashSet<PlanningObject>();
 		for (int i = 1; i <= boardSize * boardSize; i++) {
 			PlanningObject po = new PlanningObject(names[1], "c" + i);
-			po.addAttribute("index", i);
+			po.addAttribute("index", new Integer(i));
 			po.addAttribute("tedge", (i > boardSize * (boardSize - 1)) ? "yes" : "no");
 			po.addAttribute("bedge", (i <= boardSize) ? "yes" : "no");
 			po.addAttribute("ledge", (i % boardSize == 1) ? "yes" : "no");
@@ -108,9 +108,8 @@ public class RobotGridLonayout extends Problem {
 		iterator = system.getObjectMap().get("Cells").iterator();
 		while (iterator.hasNext()) {
 			PlanningObject pObject = iterator.next();
-			if (pObject.getName().equals("c1") || pObject.getName().equals("c4"))
-				pObject.addAttribute("stat", "occupied");
-			pObject.addAttribute("stat", "empty");
+			pObject.addAttribute("stat", (pObject.getName().equals("c1") || pObject.getName().equals("c4")) ? "occupied"
+					: "empty");
 		}
 
 		ArrayList<Variable> gVariables = new ArrayList<Variable>(); // TODO

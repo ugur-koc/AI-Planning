@@ -34,10 +34,16 @@ public class Action {
 		for (Variable variable : preconditions) {
 			for (PlanningObject planningObject : parameters) {
 				if (planningObject.getType().equals(variable.getParamTypes()[0])) {
-					Object value = variable.getValue();
-					if (((String) value).contains("placeholder")) {
-						int index = Integer.parseInt(((String) value).substring(((String) value).indexOf("_") + 1)) - 1;
-						value = parameters.get(index).getName();
+					String value = variable.getValue();
+					if (value.contains("placeholder")) {
+						int index = Integer.parseInt(value.charAt(12) + "") - 1;
+						if (value.length() > 13) {
+							Integer fromIndex = (Integer) parameters.get(index).get("index");
+							int increment = Integer.parseInt(value.substring(14));
+							if (value.charAt(13) == '+') {
+								value = "" + (fromIndex + increment);
+							} else value = "" + (fromIndex - increment);
+						} else value = parameters.get(index).getName();
 					}
 					variables.add(new Variable(variable, new PlanningObject(planningObject, variable.getName(), value)));// TODO
 				}

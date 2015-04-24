@@ -1,6 +1,5 @@
 Robots={r1,r2}
 Cells={c1,c2, ..., c16}
-Indexes={1,2,3, ... 16}
 Statuses={empty,occupied}
 Bool={yes,no}
 B=RobotsUCellsUStatusesUIndexes
@@ -20,7 +19,7 @@ Dom(_edge(c))=Bool
 
 Actions
 up(r:Robots,c1:Cells,c2:Cells)
-Pre:pos(r)=c1,stat(c2)=empty,tedge(c1)=no,index(c2)=c1+4
+Pre:pos(r)=c1,stat(c2)=empty,tedge(c1)=no,index(c2)=c_1+4
 Eff:pos(r)=c2,stat(c2)=occupied, stat(c2)=empty
 .
 .
