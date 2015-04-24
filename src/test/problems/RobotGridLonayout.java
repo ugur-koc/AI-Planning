@@ -15,13 +15,15 @@ import planning.core.Variable;
 import planning.utility.Helper;
 
 public class RobotGridLonayout extends Problem {
+	public static int boardSize;
 
 	public RobotGridLonayout(int boardSize, int robotCount) {
+		RobotGridLonayout.boardSize = boardSize;
 		HashMap<String, Set<PlanningObject>> B = new HashMap<String, Set<PlanningObject>>();
 		String[] names = { "Robots", "Cells", "Status", "Indexes", "Bool" }, status = { "empty", "occupied" };
 
 		Set<PlanningObject> robotSet = new HashSet<PlanningObject>();
-		for (int i = 1; i <= robotCount * robotCount; i++)
+		for (int i = 1; i <= robotCount; i++)
 			robotSet.add(new PlanningObject(names[0], "r" + i));
 		B.put(names[0], robotSet);
 
@@ -43,20 +45,21 @@ public class RobotGridLonayout extends Problem {
 		B.put(names[2], statusSet);
 
 		ArrayList<Variable> varDefs = new ArrayList<Variable>();
-		Variable stat = new Variable("status", 1, new String[] { names[1] });
 		Variable pos = new Variable("pos", 1, new String[] { names[0] });
-		Variable index = new Variable("index", 1, new String[] { names[1] });
-		Variable tedge = new Variable("tedge", 1, new String[] { names[1] });
-		Variable bedge = new Variable("bedge", 1, new String[] { names[1] });
-		Variable ledge = new Variable("ledge", 1, new String[] { names[1] });
-		Variable redge = new Variable("redge", 1, new String[] { names[1] });
-		varDefs.add(stat);
 		varDefs.add(pos);
+		Variable stat = new Variable("status", 1, new String[] { names[1] });
+		varDefs.add(stat);
+		Variable index = new Variable("index", 1, new String[] { names[1] });
 		varDefs.add(index);
+		Variable tedge = new Variable("tedge", 1, new String[] { names[1] });
 		varDefs.add(tedge);
+		Variable bedge = new Variable("bedge", 1, new String[] { names[1] });
 		varDefs.add(bedge);
+		Variable ledge = new Variable("ledge", 1, new String[] { names[1] });
 		varDefs.add(ledge);
+		Variable redge = new Variable("redge", 1, new String[] { names[1] });
 		varDefs.add(redge);
+
 		ArrayList<Action> actionsDef = new ArrayList<Action>();// TODO actions NOK
 		Action up = new Action("up", 3, new String[] { names[0], names[1], names[1] });
 		up.addPreCondition(stat, "empty", 2);
@@ -104,11 +107,13 @@ public class RobotGridLonayout extends Problem {
 		Iterator<PlanningObject> iterator = system.getObjectMap().get("Robots").iterator();
 		iterator.next().addAttribute("pos", "c1");
 		iterator.next().addAttribute("pos", "c4");
+		//iterator.next().addAttribute("pos", "c15");
+		//iterator.next().addAttribute("pos", "c17");
 
 		iterator = system.getObjectMap().get("Cells").iterator();
 		while (iterator.hasNext()) {
 			PlanningObject pObject = iterator.next();
-			pObject.addAttribute("stat", (pObject.getName().equals("c1") || pObject.getName().equals("c4")) ? "occupied"
+			pObject.addAttribute("status", (pObject.getName().equals("c1") || pObject.getName().equals("c4")) ? "occupied"
 					: "empty");
 		}
 
@@ -164,10 +169,10 @@ public class RobotGridLonayout extends Problem {
 	private int[] Co_ordinate(int d1) {
 		// TODO parameter 'boardsize' has to be made global, here I assumed
 		// boardsize is 4.
-
+		// TODO @ugur I did that just check it
 		int y = 1;
-		while (d1 > 4) {
-			d1 -= 4;
+		while (d1 > RobotGridLonayout.boardSize) {
+			d1 -= RobotGridLonayout.boardSize;
 			y += 1;
 		}
 

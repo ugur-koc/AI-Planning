@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
+import test.problems.RobotGridLonayout;
+
 import com.google.common.collect.Sets;
 
 public class StateTransitionSystem {
@@ -64,14 +66,14 @@ public class StateTransitionSystem {
 				list.add(objectMap.get(type));
 			Set<List<PlanningObject>> cartesianProduct = Sets.cartesianProduct(list);
 			for (List<PlanningObject> parameters : cartesianProduct)
-				if (action.getName().equals("up")) {// Robot motion specific code
+				if (action.getName().equals("up")) { // Robot motion specific code
 					Integer fromIndx = (Integer) parameters.get(1).get("index");
 					Integer toIndx = (Integer) parameters.get(2).get("index");
-					if (fromIndx + 4 == toIndx) allActions.add(new Action(action, parameters));
+					if (fromIndx + RobotGridLonayout.boardSize == toIndx) allActions.add(new Action(action, parameters));
 				} else if (action.getName().equals("down")) {
 					Integer fromIndx = (Integer) parameters.get(1).get("index");
 					Integer toIndx = (Integer) parameters.get(2).get("index");
-					if (fromIndx - 4 == toIndx) allActions.add(new Action(action, parameters));
+					if (fromIndx - RobotGridLonayout.boardSize == toIndx) allActions.add(new Action(action, parameters));
 				} else if (action.getName().equals("left")) {
 					Integer fromIndx = (Integer) parameters.get(1).get("index");
 					Integer toIndx = (Integer) parameters.get(2).get("index");

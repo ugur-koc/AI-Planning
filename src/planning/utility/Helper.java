@@ -15,7 +15,8 @@ public class Helper {
 	public static ArrayList<Action> getApplicableActions(State s, Problem problem) {
 		ArrayList<Action> applicableActions = new ArrayList<Action>();
 		for (Action action : problem.getSystem().getActions())
-			if (satifies(s, action.getPreconditions())) applicableActions.add(action);
+			if (satifies(s, action.getPreconditions())) 
+				applicableActions.add(action);
 		return applicableActions;
 	}
 

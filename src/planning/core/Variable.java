@@ -11,6 +11,7 @@ public class Variable {
 	private String[] paramTypes;
 	private List<PlanningObject> parameters;
 	private String[] domain;
+	private int paramIndx;
 
 	public Variable(String name, int paramCount, String[] paramTypes) {
 		super();
@@ -40,12 +41,13 @@ public class Variable {
 		this.paramTypes = other.paramTypes;
 	}
 
-	public Variable(Variable other, String paramType) {
+	public Variable(Variable other, String paramType, int index) {
 		this.name = other.name;
 		this.parameters = other.parameters;
 		this.paramCount = other.paramCount;
 		this.domain = other.domain;
 		this.paramTypes = new String[] { paramType };
+		paramIndx = index;
 	}
 
 	public String getName() {
@@ -86,6 +88,10 @@ public class Variable {
 	public Object apply() {
 		if (paramCount == 2) return parameters.get(0).get(name) == parameters.get(1).get(name);
 		return parameters.get(0).get(name);
+	}
+
+	public int getParamIndx() {
+		return paramIndx;
 	}
 
 	@Override

@@ -17,7 +17,8 @@ public class PlanningTests {
 
 	@Test
 	public void testPlan_2() throws Exception {
-		Plan plan = Planner.solve(new RobotGridLonayout(6, 2), "AStar");
+		RobotGridLonayout problem = new RobotGridLonayout(6, 2);
+		Plan plan = Planner.solve(problem, "AStar");
 		System.out.println(plan.toString());
 	}
 }
