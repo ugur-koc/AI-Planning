@@ -5,13 +5,9 @@ import org.junit.Test;
 import planning.core.Plan;
 import planning.core.Planner;
 import test.problems.Coloring;
-import test.problems.RobotGridLonayout;
+import test.problems.RobotGridLayout;
 
 public class PlanningTests {
-	
-	public static void main(String[] args) throws Exception{
-		testPlan_2();
-	}
 
 	@Test
 	public void testPlan_1() throws Exception {
@@ -20,15 +16,15 @@ public class PlanningTests {
 	}
 
 	@Test
-	public static void testPlan_2() throws Exception {
-		RobotGridLonayout problem = new RobotGridLonayout(6, 2);
+	public void testPlan_2() throws Exception {
+		RobotGridLayout problem = new RobotGridLayout(6, 2);
 		Plan plan = Planner.solve(problem, "AStar");
 		System.out.println(plan.toString());
 	}
 	
 	@Test
 	public void testPlan_3() throws Exception {
-		RobotGridLonayout problem = new RobotGridLonayout(6, 2);
+		RobotGridLayout problem = new RobotGridLayout(6, 1);
 		Plan plan = Planner.solve(problem, "FS");
 		System.out.println(plan.toString());
 	}

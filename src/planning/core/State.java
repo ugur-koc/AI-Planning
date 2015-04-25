@@ -30,6 +30,12 @@ public class State {
 			if (var.getName().equals(v.getName())) return (String) var.apply();// TODO
 		return null;
 	}
+	
+	public String getValueOf(String vName, String poName) {
+		for (Variable var : variables)
+			if (var.getName().equals(vName) && var.getParameters().get(0).getName().equals(poName) ) return (String) var.apply();// TODO
+		return null;
+	}
 
 	public void updateVariable(Variable v) {
 		for (Variable variable : variables)

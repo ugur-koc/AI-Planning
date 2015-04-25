@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import planning.utility.Helper;
-import test.problems.RobotGridLonayout;
+import test.problems.RobotGridLayout;
 import acting.Actor;
 
 /*
@@ -18,8 +18,8 @@ public class Experiment {
 
 	public static void main(String[] args) throws IOException {
 		int dynamicities[] = { 0, 1, 2, 3, 4, 5 }; // 0 zero means no dynamicity
-		String[] planningAlgs = { "AStar", "DFS", "FS" }, refMethods = { "AP_lazy", "AP_interleaved", "AP_mixed" };
-		RobotGridLonayout[] problems = { new RobotGridLonayout(3, 2), new RobotGridLonayout(4, 2) };
+		String[] planningAlgs = {  "FS" }, refMethods = { "AP_lazy", "AP_interleaved", "AP_mixed" }; //"AStar", "DFS",
+		RobotGridLayout[] problems = { new RobotGridLayout(3, 2), new RobotGridLayout(4, 2) };
 
 		long startTime, totalTime;
 		String stad = "pAlg,rAlg,robotCount,gridSize,dynamicity,planningCallCount,takenActionCount,pTime,aTime,totalTime\n";
@@ -27,7 +27,7 @@ public class Experiment {
 
 		for (String planningAlg : planningAlgs) {
 			for (String refinement : refMethods) {
-				for (RobotGridLonayout problem : problems) {
+				for (RobotGridLayout problem : problems) {
 					for (int dyn : dynamicities) {
 						for (int r = 0; r < 5; r++) {
 							startTime = System.currentTimeMillis();

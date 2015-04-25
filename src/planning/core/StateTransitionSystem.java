@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
-import test.problems.RobotGridLonayout;
+import test.problems.RobotGridLayout;
 
 import com.google.common.collect.Sets;
 
@@ -70,9 +70,9 @@ public class StateTransitionSystem {
 				if ("updownleftrigth".contains(action.getName())) {
 					int fromIndx = Integer.parseInt((String) parameters.get(1).get("index"));
 					int toIndx = Integer.parseInt((String) parameters.get(2).get("index"));
-					if (action.getName().equals("down") && fromIndx - RobotGridLonayout.boardSize == toIndx) allActions
+					if (action.getName().equals("down") && fromIndx - RobotGridLayout.boardSize == toIndx) allActions
 							.add(new Action(action, parameters));
-					else if (action.getName().equals("up") && fromIndx + RobotGridLonayout.boardSize == toIndx) allActions
+					else if (action.getName().equals("up") && fromIndx + RobotGridLayout.boardSize == toIndx) allActions
 							.add(new Action(action, parameters));
 					else if (action.getName().equals("left") && fromIndx - 1 == toIndx) allActions.add(new Action(action,
 							parameters));

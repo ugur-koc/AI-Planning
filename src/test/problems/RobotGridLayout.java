@@ -13,11 +13,11 @@ import planning.core.State;
 import planning.core.StateTransitionSystem;
 import planning.core.Variable;
 
-public class RobotGridLonayout extends Problem {
+public class RobotGridLayout extends Problem {
 	public static int boardSize;
 
-	public RobotGridLonayout(int boardSize, int robotCount) {
-		RobotGridLonayout.boardSize = boardSize;
+	public RobotGridLayout(int boardSize, int robotCount) {
+		RobotGridLayout.boardSize = boardSize;
 		HashMap<String, Set<PlanningObject>> B = new HashMap<String, Set<PlanningObject>>();
 		String[] names = { "Robots", "Cells", "Status", "Indexes", "Bool" }, status = { "empty", "occupied" };
 
@@ -100,84 +100,61 @@ public class RobotGridLonayout extends Problem {
 		right.addEffect(pos, "placeholder_3", 0);
 		actionsDef.add(right);
 
-		StateTransitionSystem system = new StateTransitionSystem(actionsDef, B);
-		State s0 = new State(system.enumerateAllVariables(varDefs));
+		StateTransitionSystem robotSystem = new StateTransitionSystem(actionsDef, B);
+		State s0 = new State(robotSystem.enumerateAllVariables(varDefs));
 
-		Iterator<PlanningObject> iterator = system.getObjectMap().get("Robots").iterator();
+		Iterator<PlanningObject> iterator = robotSystem.getObjectMap().get("Robots").iterator();
 		iterator.next().addAttribute("pos", "c1");
-		iterator.next().addAttribute("pos", "c4");
-		//iterator.next().addAttribute("pos", "c15");
+		 iterator.next().addAttribute("pos", "c7");
+		// iterator.next().addAttribute("pos", "c15");
 		// iterator.next().addAttribute("pos", "c17");
 
-		iterator = system.getObjectMap().get("Cells").iterator();
+		iterator = robotSystem.getObjectMap().get("Cells").iterator();
 		while (iterator.hasNext()) {
 			PlanningObject pObject = iterator.next();
-			pObject.addAttribute("status", (pObject.getName().equals("c1") || pObject.getName().equals("c4")) ? "occupied"
-					: "empty");
+			pObject.addAttribute("status",
+					(pObject.getName().equals("c1") || pObject.getName().equals("c7")) ? "occupied" : "empty");
 		}
 
 		ArrayList<Variable> gVariables = new ArrayList<Variable>(); // TODO
 		PlanningObject p = new PlanningObject(names[0], "r1");
 		p.addAttribute("pos", "c36");
-
 		gVariables.add(new Variable(new Variable("pos", 1, new String[] { "Robots" }), p));
 
-		State g = new State(gVariables);
-
-		system.getStateMap().put(s0.toString().hashCode(), s0.toString());
-		this.system = system;
+		robotSystem.getStateMap().put(s0.toString().hashCode(), s0.toString());
+		system = robotSystem;
 		initialState = s0;
-		goalState = g;
+		goalState = new State(gVariables);
 	}
 
 	@Override
 	public Action heuristic(State s, Problem problem, ArrayList<Action> applicableActions) {
-		Action candidateAction = applicableActions.get(0);
-		State g = problem.getGoalState();
-		PlanningObject p = new PlanningObject("Robots", "r1");
-		Variable v = new Variable(new Variable("pos", 1, new String[] { "Robots" }), p);
-		String c = g.getValueOf(v);
-
 		double e = Double.POSITIVE_INFINITY;
+		PlanningObject robot = problem.getGoalState().getVariables().get(0).getParameters().get(0);
+		String destCell = (String) robot.get("pos");
 
+		Action candidateAction = applicableActions.get(0);
 		for (Action action : applicableActions) {
 			State r = problem.getSystem().transition(s, action);
-			PlanningObject p2 = new PlanningObject("Robots", "r1");
-			Variable v2 = new Variable(new Variable("pos", 1, new String[] { "Robots" }), p2);
-			String d = r.getValueOf(v2);
-			double e2 = Distance(c, d);
+			String d = r.getValueOf("pos", robot.getName());
+			double e2 = distance(Integer.parseInt(destCell.substring(1)), Integer.parseInt(d.substring(1)));
 			if (e2 < e) {
 				candidateAction = action;
 				e = e2;
 			}
 		}
-        System.out.println(candidateAction);
-		return candidateAction;// TODO implement the heuristic function
+		return candidateAction;
 	}
-	
-	
-	private static double Distance(String c, String d) {
-		// TODO Auto-generated method stub
-		String p1=c.substring(1);
-		String q1=d.substring(1);
-		int c1 = Integer.parseInt(p1);
-		int d1 = Integer.parseInt(q1);
-		int[] C1 = Co_ordinate(c1);
-		int[] D1 = Co_ordinate(d1);
+
+	private static double distance(int c1, int d1) {
+		int[] C1 = Co_ordinate(c1), D1 = Co_ordinate(d1);
 		return Math.pow(C1[0] - D1[0], 2) + Math.pow(C1[1] - D1[1], 2);
-		
 	}
 
 	private static int[] Co_ordinate(int d1) {
-		// TODO parameter 'boardsize' has to be made global, here I assumed
-		// boardsize is 4.
-		// TODO @ugur I did that just check it
-		int y = 1;
-		while (d1 > RobotGridLonayout.boardSize) {
-			d1 -= RobotGridLonayout.boardSize;
-			y += 1;
-		}
-
+		int y = 1 + d1 / RobotGridLayout.boardSize;
+		while (d1 > RobotGridLayout.boardSize)
+			d1 -= RobotGridLayout.boardSize;
 		return new int[] { d1, y };
 	}
 }
