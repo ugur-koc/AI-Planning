@@ -17,7 +17,7 @@ public class PlanningTests {
 
 	@Test
 	public void testPlan_2() throws Exception {
-		RobotGridLayout problem = new RobotGridLayout(6, 2);
+		RobotGridLayout problem = new RobotGridLayout(6, 4);
 		Plan plan = Planner.solve(problem, "AStar");
 		System.out.println(plan.toString());
 	}

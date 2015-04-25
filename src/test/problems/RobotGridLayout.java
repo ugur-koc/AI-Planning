@@ -105,15 +105,15 @@ public class RobotGridLayout extends Problem {
 
 		Iterator<PlanningObject> iterator = robotSystem.getObjectMap().get("Robots").iterator();
 		iterator.next().addAttribute("pos", "c1");
-		 iterator.next().addAttribute("pos", "c7");
-		// iterator.next().addAttribute("pos", "c15");
-		// iterator.next().addAttribute("pos", "c17");
+		iterator.next().addAttribute("pos", "c7");
+		iterator.next().addAttribute("pos", "c15");
+		iterator.next().addAttribute("pos", "c17");
 
 		iterator = robotSystem.getObjectMap().get("Cells").iterator();
 		while (iterator.hasNext()) {
 			PlanningObject pObject = iterator.next();
-			pObject.addAttribute("status",
-					(pObject.getName().equals("c1") || pObject.getName().equals("c7")) ? "occupied" : "empty");
+			pObject.addAttribute("status", (pObject.getName().equals("c1") || pObject.getName().equals("c7")
+					|| pObject.getName().equals("c15") || pObject.getName().equals("c17")) ? "occupied" : "empty");
 		}
 
 		ArrayList<Variable> gVariables = new ArrayList<Variable>(); // TODO
