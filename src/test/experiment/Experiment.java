@@ -15,31 +15,35 @@ import acting.Actor;
  * 
  */
 public class Experiment {
+	public static int plannerCallCount, actionCount;
+	public static long totalPlanningTime, totalActingTime, startTime, totalTime;;
 
 	public static void main(String[] args) throws IOException {
-		int dynamicities[] = { 0, 1, 2, 3, 4, 5 }; // 0 zero means no dynamicity
-		String[] planningAlgs = {  "FS" }, refMethods = { "AP_lazy", "AP_interleaved", "AP_mixed" }; //"AStar", "DFS",
-		RobotGridLayout[] problems = { new RobotGridLayout(3, 2), new RobotGridLayout(4, 2) };
 
-		long startTime, totalTime;
-		String stad = "pAlg,rAlg,robotCount,gridSize,dynamicity,planningCallCount,takenActionCount,pTime,aTime,totalTime\n";
+		int gridSize[] = { 6, 8, 16, 25 }, robotCount[] = { 2 }, dynamicities[] = { 0, 1, 2, 3, 4, 5 };
+		String[] planningAlgs = { "AStar" }, refMethods = { "AP_lazy", "AP_interleaved", "AP_mixed" };
+		// , "FS", "DFS"
+		String stad = "run,planningAlg,refinementAlg,robotCount,gridSize,dynamicity,planningCallCount,totalPlanningTime,averagePlanningTime,"
+				+ "takenActionCount,totalActingTime,averageActingTime,totalTime\n";
 		Helper.writeFile("stads.txt", stad, false);
 
-		for (String planningAlg : planningAlgs) {
-			for (String refinement : refMethods) {
-				for (RobotGridLayout problem : problems) {
-					for (int dyn : dynamicities) {
-						for (int r = 0; r < 5; r++) {
-							startTime = System.currentTimeMillis();
-							Actor.act(problem, refinement, planningAlg, dyn);
-							totalTime = TimeUnit.MILLISECONDS.toSeconds(Math.abs(startTime - System.currentTimeMillis()));
-							// TODO missing variables: robotCount, gridSize,
-							stad = r + "," + planningAlg + "," + "," + refinement + "," + dyn + "," + totalTime + "\n";
-							Helper.writeFile("stads.txt", stad, true);
-						}
-					}
-				}
-			}
-		}
+		for (String planningAlg : planningAlgs)
+			for (String refinement : refMethods)
+				for (int gS : gridSize)
+					for (int rC : robotCount)
+						for (int dyn : dynamicities)
+							for (int r = 0; r < 1; r++) {
+								plannerCallCount = actionCount = 0;
+								totalPlanningTime = totalActingTime = 0;
+								startTime = System.currentTimeMillis();
+								Actor.act(new RobotGridLayout(gS, rC), refinement, planningAlg, dyn);
+								totalTime = TimeUnit.MILLISECONDS.toMillis(Math.abs(startTime - System.currentTimeMillis()));
+								stad = r + "," + planningAlg + "," + refinement + "," + rC + "," + gS + "," + dyn + ","
+										+ plannerCallCount + "," + totalPlanningTime + ","
+										+ ((long) totalPlanningTime / (long) plannerCallCount) + "," + actionCount + ","
+										+ totalActingTime + "," + ((long) totalActingTime / (long) actionCount) + "," + totalTime
+										+ "\n";
+								Helper.writeFile("stads.txt", stad, true);
+							}
 	}
 }

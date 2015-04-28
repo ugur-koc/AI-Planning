@@ -13,7 +13,6 @@ import planning.core.Problem;
 import planning.core.State;
 import planning.core.StateTransitionSystem;
 import planning.core.Variable;
-import planning.utility.Helper;
 
 public class Coloring extends Problem {
 	static Random random = new Random();

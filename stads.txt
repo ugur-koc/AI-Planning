@@ -1,0 +1,2 @@
+run,planningAlg,refinementAlg,robotCount,gridSize,dynamicity,planningCallCount,totalPlanningTime,averagePlanningTime,takenActionCount,totalActingTime,averageActingTime,totalTime
+0,AStar,AP_lazy,2,6,0,1,2041,2041,10,25,2,2347

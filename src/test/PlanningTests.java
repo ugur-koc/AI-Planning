@@ -24,8 +24,13 @@ public class PlanningTests {
 	
 	@Test
 	public void testPlan_3() throws Exception {
-		RobotGridLayout problem = new RobotGridLayout(6, 1);
+		RobotGridLayout problem = new RobotGridLayout(6, 4);
 		Plan plan = Planner.solve(problem, "FS");
 		System.out.println(plan.toString());
 	}
-}
+	@Test
+	public void testPlan_4() throws Exception {
+		RobotGridLayout problem = new RobotGridLayout(6, 4);
+		Plan plan = Planner.solve(problem, "DFS");
+		System.out.println(plan.toString());
+	}}

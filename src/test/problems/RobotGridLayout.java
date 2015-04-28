@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Random;
 import java.util.Set;
 
 import planning.core.Action;
@@ -18,6 +19,7 @@ public class RobotGridLayout extends Problem {
 
 	public RobotGridLayout(int boardSize, int robotCount) {
 		RobotGridLayout.boardSize = boardSize;
+		Random random = new Random();
 		HashMap<String, Set<PlanningObject>> B = new HashMap<String, Set<PlanningObject>>();
 		String[] names = { "Robots", "Cells", "Status", "Indexes", "Bool" }, status = { "empty", "occupied" };
 
@@ -103,22 +105,29 @@ public class RobotGridLayout extends Problem {
 		StateTransitionSystem robotSystem = new StateTransitionSystem(actionsDef, B);
 		State s0 = new State(robotSystem.enumerateAllVariables(varDefs));
 
+		ArrayList<String> occupiedCells = new ArrayList<String>();
+		String cell;
 		Iterator<PlanningObject> iterator = robotSystem.getObjectMap().get("Robots").iterator();
-		iterator.next().addAttribute("pos", "c1");
-		iterator.next().addAttribute("pos", "c7");
-		iterator.next().addAttribute("pos", "c15");
-		iterator.next().addAttribute("pos", "c17");
+		while (iterator.hasNext()) {
+			PlanningObject po = iterator.next();
+			if (po.getName().equals("r1")) {
+				cell = "c1";
+			} else do {
+				cell = "c" + (random.nextInt(boardSize * boardSize - 1) + 1);
+			} while (occupiedCells.contains(cell));
+			po.addAttribute("pos", cell);
+			occupiedCells.add(cell);
+		}
 
 		iterator = robotSystem.getObjectMap().get("Cells").iterator();
 		while (iterator.hasNext()) {
 			PlanningObject pObject = iterator.next();
-			pObject.addAttribute("status", (pObject.getName().equals("c1") || pObject.getName().equals("c7")
-					|| pObject.getName().equals("c15") || pObject.getName().equals("c17")) ? "occupied" : "empty");
+			pObject.addAttribute("status", occupiedCells.contains(pObject.getName()) ? "occupied" : "empty");
 		}
 
 		ArrayList<Variable> gVariables = new ArrayList<Variable>(); // TODO
 		PlanningObject p = new PlanningObject(names[0], "r1");
-		p.addAttribute("pos", "c36");
+		p.addAttribute("pos", "c" + boardSize * boardSize);
 		gVariables.add(new Variable(new Variable("pos", 1, new String[] { "Robots" }), p));
 
 		robotSystem.getStateMap().put(s0.toString().hashCode(), s0.toString());

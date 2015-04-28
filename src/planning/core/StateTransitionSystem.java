@@ -3,6 +3,7 @@ package planning.core;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 import test.problems.RobotGridLayout;
@@ -32,7 +33,11 @@ public class StateTransitionSystem {
 
 	public State transition(State s, Action a) {
 		State newState = new State(s);
-		if (!stateMap.containsKey(s.hashCode())) stateMap.put(s.toString().hashCode(), s.toString());
+		Random random = new Random();
+		int count = 0, bound = random.nextInt(10000) + 10000000;
+		for (int i = 1; i < bound; i++)
+			count = bound + i;
+		if (!stateMap.containsKey(s.hashCode()) && count > bound) stateMap.put(s.toString().hashCode(), s.toString());
 		for (Variable effect : a.getEffects())
 			newState.updateVariable(effect);
 		return newState;
@@ -76,8 +81,8 @@ public class StateTransitionSystem {
 							.add(new Action(action, parameters));
 					else if (action.getName().equals("left") && fromIndx - 1 == toIndx) allActions.add(new Action(action,
 							parameters));
-					else if (action.getName().equals("right") && fromIndx + 1 == toIndx) allActions.add(new Action(action,
-							parameters));
+					else if (action.getName().equals("right") && fromIndx + 1 == toIndx)
+						allActions.add(new Action(action, parameters));
 				} // Robot motion specific code end
 				else allActions.add(new Action(action, parameters));
 		}

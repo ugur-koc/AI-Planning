@@ -70,18 +70,6 @@ public class Action {
 		return paramCount;
 	}
 
-	@Override
-	public String toString() {
-		String params = "", pre = "\nPre:", eff = "\nEff:";
-		for (PlanningObject po : parameters)
-			params += po.toString() + " ";
-		for (Variable variable : preconditions)
-			pre += variable.toString() + ",";
-		for (Variable variable : effects)
-			eff += variable.toString() + ",";
-		return name + "(" + params + ")" + pre.substring(0, pre.length() - 1) + eff.substring(0, eff.length() - 1) + "\n";
-	}
-
 	public void addPreCondition(Variable v, String value, int index) {
 		Variable variable = new Variable(v, paramTypes[index], index);
 		variable.setValue(value);
@@ -92,5 +80,20 @@ public class Action {
 		Variable variable = new Variable(v, paramTypes[index], index);
 		variable.setValue(value);
 		effects.add(variable);
+	}
+	public List<PlanningObject> getParameters() {
+		return parameters;
+	}
+
+	@Override
+	public String toString() {
+		String params = "", pre = " Pre:", eff = " Eff:";
+		for (PlanningObject po : parameters)
+			params += po.toString() + " ";
+		for (Variable variable : preconditions)
+			pre += variable.toString() + ",";
+		for (Variable variable : effects)
+			eff += variable.toString() + ",";
+		return name + "(" + params + ")" + pre.substring(0, pre.length() - 1) + eff.substring(0, eff.length() - 1);
 	}
 }

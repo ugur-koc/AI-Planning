@@ -30,10 +30,11 @@ public class State {
 			if (var.getName().equals(v.getName())) return (String) var.apply();// TODO
 		return null;
 	}
-	
+
 	public String getValueOf(String vName, String poName) {
 		for (Variable var : variables)
-			if (var.getName().equals(vName) && var.getParameters().get(0).getName().equals(poName) ) return (String) var.apply();// TODO
+			if (var.getName().equals(vName) && var.getParameters().get(0).getName().equals(poName))
+				return (String) var.apply();// TODO
 		return null;
 	}
 
@@ -55,5 +56,13 @@ public class State {
 		for (Variable var : variables)
 			if (var.getSignature().equals(cond.getSignature()) && var.apply().equals(cond.apply())) return true;
 		return false;
+	}
+
+	public void updateVariable(String toCell, String att, String val) {
+		for (Variable variable : variables)
+			if (variable.getParameters().get(0).getName().equals(toCell)) {
+				variable.getParameters().get(0).addAttribute(att, val);
+				break;
+			}
 	}
 }
