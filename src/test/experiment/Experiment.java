@@ -20,19 +20,19 @@ public class Experiment {
 
 	public static void main(String[] args) throws IOException {
 
-		int gridSize[] = { 6, 8, 16, 25 }, robotCount[] = { 2 }, dynamicities[] = { 0, 1, 2, 3, 4, 5 };
-		String[] planningAlgs = { "AStar" }, refMethods = { "AP_lazy", "AP_interleaved", "AP_mixed" };
-		// , "FS", "DFS"
+		int gridSize[] = { 6, 8, 16, 25 }, robotCount[] = { 2, 4 }, dynamicities[] = { 0, 1, 2, 3, 4, 5 };
+		String[] planningAlgs = { "DFS", "AStar" }, refMethods = { "AP_lazy", "AP_interleaved", "AP_mixed" };
+		// , "FS"
 		String stad = "run,planningAlg,refinementAlg,robotCount,gridSize,dynamicity,planningCallCount,totalPlanningTime,averagePlanningTime,"
 				+ "takenActionCount,totalActingTime,averageActingTime,totalTime\n";
 		Helper.writeFile("stads.txt", stad, false);
 
 		for (String planningAlg : planningAlgs)
-			for (String refinement : refMethods)
+			for (int rC : robotCount)
 				for (int gS : gridSize)
-					for (int rC : robotCount)
-						for (int dyn : dynamicities)
-							for (int r = 0; r < 1; r++) {
+					for (String refinement : refMethods)
+						for (int r = 0; r < 5; r++)
+							for (int dyn : dynamicities) {
 								plannerCallCount = actionCount = 0;
 								totalPlanningTime = totalActingTime = 0;
 								startTime = System.currentTimeMillis();

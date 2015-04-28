@@ -17,7 +17,7 @@ public class PlanningTests {
 
 	@Test
 	public void testPlan_2() throws Exception {
-		RobotGridLayout problem = new RobotGridLayout(6, 4);
+		RobotGridLayout problem = new RobotGridLayout(16, 2);
 		Plan plan = Planner.solve(problem, "AStar");
 		System.out.println(plan.toString());
 	}
@@ -30,7 +30,7 @@ public class PlanningTests {
 	}
 	@Test
 	public void testPlan_4() throws Exception {
-		RobotGridLayout problem = new RobotGridLayout(6, 4);
+		RobotGridLayout problem = new RobotGridLayout(6, 2);
 		Plan plan = Planner.solve(problem, "DFS");
 		System.out.println(plan.toString());
 	}}

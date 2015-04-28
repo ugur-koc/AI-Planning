@@ -62,8 +62,78 @@ public class Planner {
 			s = problem.getSystem().transition(s, a);
 			problem.setInitialState(s);
 			plan = DepthFirstSearch(problem, visited);
-			plan.addAction(a);
+			plan.addActionToFront(a);
+			return plan;
 		}
 		throw new NoPlanException("DepthFirstSearch: No plan found!");
+	}
+
+	public static Plan AStar2(Problem problem, ArrayList<Integer> visited) throws NoPlanException {
+		Tuple<Plan, State> minTuple, t2;
+		ArrayList<Tuple<Plan, State>> fringe = new ArrayList<Tuple<Plan, State>>(), expanded = new ArrayList<Tuple<Plan, State>>();
+		fringe.add(new Tuple<Plan, State>(new Plan(), problem.getInitialState()));
+		while (true) {
+			minTuple = min(fringe);
+			fringe.remove(minTuple);
+			expanded.add(minTuple);
+			if (Helper.satifies(minTuple.s, problem.getGoalState())) return minTuple.pi;
+			ArrayList<Action> applicableActions = Helper.getApplicableActions(minTuple.s, problem);
+			for (Action action : applicableActions) {
+				State s1 = problem.getSystem().transition(minTuple.s, action);
+				Plan p1 = new Plan(minTuple.pi, action);
+				t2 = constains(fringe, expanded, s1);
+				if (t2 != null) {
+					if (t2.pi.length() > p1.length()) {
+						fringe.remove(t2);
+						expanded.remove(t2);
+					} else continue;
+				}
+				fringe.add(new Tuple<Plan, State>(p1, s1));
+			}
+		}
+	}
+
+	private static Tuple<Plan, State> constains(ArrayList<Tuple<Plan, State>> fringe,
+			ArrayList<Tuple<Plan, State>> expanded, State s1) {
+		Tuple<Plan, State> result = null;
+		for (Tuple<Plan, State> tuple : fringe)
+			if (tuple.s.hashCode() == s1.hashCode()) {
+				result = tuple;
+				break;
+			}
+		if (result == null) for (Tuple<Plan, State> tuple : expanded)
+			if (tuple.s.hashCode() == s1.hashCode()) {
+				result = tuple;
+				break;
+			}
+		return result;
+	}
+
+	private static Tuple<Plan, State> min(ArrayList<Tuple<Plan, State>> fringe) {
+		int minCost = Integer.MAX_VALUE, cost;
+		Tuple<Plan, State> result = null;
+		for (Tuple<Plan, State> tuple : fringe) {
+			cost = tuple.pi.length() + h(tuple.s);
+			if (minCost > cost) {
+				minCost = cost;
+				result = tuple;
+			}
+		}
+		return result;
+	}
+
+	private static int h(State s) {
+		// TODO implement this
+		return 0;
+	}
+}
+
+class Tuple<P, S> {
+	public P pi;
+	public S s;
+
+	public Tuple(P p, S s) {
+		this.pi = p;
+		this.s = s;
 	}
 }

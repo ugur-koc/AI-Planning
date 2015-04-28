@@ -104,7 +104,7 @@ public class RobotGridLayout extends Problem {
 
 		StateTransitionSystem robotSystem = new StateTransitionSystem(actionsDef, B);
 		State s0 = new State(robotSystem.enumerateAllVariables(varDefs));
-
+		
 		ArrayList<String> occupiedCells = new ArrayList<String>();
 		String cell;
 		Iterator<PlanningObject> iterator = robotSystem.getObjectMap().get("Robots").iterator();

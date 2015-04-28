@@ -72,16 +72,14 @@ public class StateTransitionSystem {
 			Set<List<PlanningObject>> cartesianProduct = Sets.cartesianProduct(list);
 			for (List<PlanningObject> parameters : cartesianProduct)
 				// Robot motion specific code
-				if ("updownleftrigth".contains(action.getName())) {
+				if ("updownleftright".contains(action.getName())) {
 					int fromIndx = Integer.parseInt((String) parameters.get(1).get("index"));
 					int toIndx = Integer.parseInt((String) parameters.get(2).get("index"));
-					if (action.getName().equals("down") && fromIndx - RobotGridLayout.boardSize == toIndx) allActions
-							.add(new Action(action, parameters));
-					else if (action.getName().equals("up") && fromIndx + RobotGridLayout.boardSize == toIndx) allActions
-							.add(new Action(action, parameters));
-					else if (action.getName().equals("left") && fromIndx - 1 == toIndx) allActions.add(new Action(action,
-							parameters));
-					else if (action.getName().equals("right") && fromIndx + 1 == toIndx)
+					if (parameters.get(0).getName().equals("r1")
+							&& ((action.getName().equals("right") && fromIndx + 1 == toIndx)
+									|| (action.getName().equals("down") && fromIndx - RobotGridLayout.boardSize == toIndx)
+									|| (action.getName().equals("left") && fromIndx - 1 == toIndx) || (action.getName().equals(
+									"up") && fromIndx + RobotGridLayout.boardSize == toIndx)))
 						allActions.add(new Action(action, parameters));
 				} // Robot motion specific code end
 				else allActions.add(new Action(action, parameters));

@@ -94,6 +94,6 @@ public class Action {
 			pre += variable.toString() + ",";
 		for (Variable variable : effects)
 			eff += variable.toString() + ",";
-		return name + "(" + params + ")" + pre.substring(0, pre.length() - 1) + eff.substring(0, eff.length() - 1);
+		return name + "(" + params + ")" + pre.substring(0, pre.length() - 1) + eff.substring(0, eff.length() - 1)+"\n";
 	}
 }

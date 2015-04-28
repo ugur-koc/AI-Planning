@@ -23,6 +23,12 @@ public class Plan {
 		}
 	}
 
+	public Plan(Plan other, Action action) {
+		for (Action a : other.actions)
+			actions.add(a);
+		actions.add(action);
+	}
+
 	public void addAction(Action a) {
 		actions.add(a);
 	}
@@ -39,7 +45,7 @@ public class Plan {
 	public String toString() {
 		String planStr = "";
 		for (Action action : actions)
-			planStr += action.toString() + "\n";
+			planStr += action.toString();
 		return planStr;
 	}
 
@@ -47,5 +53,13 @@ public class Plan {
 		Action act = actions.get(0);
 		actions.remove(0);
 		return act;
+	}
+
+	public void addActionToFront(Action a) {
+		actions.add(0, a);
+	}
+
+	public int length() {
+		return actions.size();
 	}
 }
