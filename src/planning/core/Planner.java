@@ -57,7 +57,7 @@ public class Planner {
 		Tuple<Plan, State> minTuple, t2;
 		ArrayList<Tuple<Plan, State>> fringe = new ArrayList<Tuple<Plan, State>>(), expanded = new ArrayList<Tuple<Plan, State>>();
 		fringe.add(new Tuple<Plan, State>(new Plan(), problem.getInitialState()));
-		while (true) {
+		while (fringe.size() > 0) {
 			minTuple = min(fringe, problem.getGoalState());
 			fringe.remove(minTuple);
 			expanded.add(minTuple);
@@ -76,22 +76,16 @@ public class Planner {
 				fringe.add(new Tuple<Plan, State>(p1, s1));
 			}
 		}
+		throw new NoPlanException("AStar: No plan found!");
 	}
 
 	private static Tuple<Plan, State> contains(ArrayList<Tuple<Plan, State>> fringe,
 			ArrayList<Tuple<Plan, State>> expanded, State s1) {
-		Tuple<Plan, State> result = null;
 		for (Tuple<Plan, State> tuple : fringe)
-			if (tuple.s.hashCode() == s1.hashCode()) {
-				result = tuple;
-				break;
-			}
-		if (result == null) for (Tuple<Plan, State> tuple : expanded)
-			if (tuple.s.hashCode() == s1.hashCode()) {
-				result = tuple;
-				break;
-			}
-		return result;
+			if (tuple.s.toString().hashCode() == s1.toString().hashCode()) return tuple;
+		for (Tuple<Plan, State> tuple : expanded)
+			if (tuple.s.toString().hashCode() == s1.toString().hashCode()) return tuple;
+		return null;
 	}
 
 	private static Tuple<Plan, State> min(ArrayList<Tuple<Plan, State>> fringe, State g) {

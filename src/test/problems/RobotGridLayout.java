@@ -113,7 +113,7 @@ public class RobotGridLayout extends Problem {
 			if (po.getName().equals("r1")) {
 				cell = "c1";
 			} else do {
-				cell = "c" + (random.nextInt(boardSize * boardSize - 1) + 1);
+				cell = "c" + (random.nextInt(boardSize * boardSize - 2) + 1);
 			} while (occupiedCells.contains(cell));
 			po.addAttribute("pos", cell);
 			occupiedCells.add(cell);

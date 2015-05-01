@@ -41,6 +41,7 @@ public class Experiment {
 									Actor.act(new RobotGridLayout(gS, rC), refinement, planningAlg, dyn);
 								} catch (NoPlanException e) {
 									exceptionMessage = "," + e.getMessage();
+									actionCount = 1;
 								}
 								totalTime = TimeUnit.MILLISECONDS.toMillis(Math.abs(startTime - System.currentTimeMillis()));
 								stad = r + "," + planningAlg + "," + refinement + "," + rC + "," + gS + "," + dyn + ","
