@@ -24,6 +24,7 @@ public class Plan {
 	}
 
 	public Plan(Plan other, Action action) {
+		actions = new ArrayList<Action>();
 		for (Action a : other.actions)
 			actions.add(a);
 		actions.add(action);

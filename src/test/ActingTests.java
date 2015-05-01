@@ -15,7 +15,7 @@ public class ActingTests {
 
 	@Test
 	public void testActor2() throws Exception {
-		Actor.act(new Coloring(), "AP_interleaved", "AStar", 0);
+		Actor.act(new Coloring(), "AP_interleaved", "DFS", 0);
 	}
 
 	@Test
@@ -30,7 +30,7 @@ public class ActingTests {
 
 	@Test
 	public void testActor5() throws Exception {
-		Actor.act(new RobotGridLayout(6, 2), "AP_interleaved", "AStar", 0);
+		Actor.act(new RobotGridLayout(6, 2), "AP_interleaved", "DFS", 0);
 	}
 
 	@Test

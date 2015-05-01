@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
+import exceptions.NoPlanException;
 import planning.core.Action;
 import planning.core.Plan;
 import planning.core.Planner;
@@ -20,7 +21,7 @@ public class Actor {
 	private static int dynamicity = 0;
 	private static long sTime;
 
-	public static void act(Problem problem, String refinement, String planningStr, int dynamic) {
+	public static void act(Problem problem, String refinement, String planningStr, int dynamic) throws NoPlanException {
 		planning = planningStr;
 		dynamicity = dynamic;
 		if (refinement.equals("AP_lazy")) AP_lazy(problem);
@@ -28,14 +29,14 @@ public class Actor {
 		else AP_mixed(problem);
 	}
 
-	public static void AP_lazy(Problem problem) {
+	public static void AP_lazy(Problem problem) throws NoPlanException {
 		State s = problem.getInitialState();
 		while (!Helper.satifies(s, problem.getGoalState())) {
 			Experiment.plannerCallCount++;
 			sTime = System.currentTimeMillis();
 			Plan plan = Planner.solve(problem, planning);
 			Experiment.totalPlanningTime += TimeUnit.MILLISECONDS.toMillis(Math.abs(sTime - System.currentTimeMillis()));
-			//System.out.println(plan.toString());
+			// System.out.println(plan.toString());
 			if (plan.getActions().size() == 0) return;
 			while (plan.getActions().size() > 0 && Simulate(problem, s, plan, problem.getGoalState())) {
 				Experiment.actionCount++;
@@ -48,7 +49,7 @@ public class Actor {
 		}
 	}
 
-	public static void AP_interleaved(Problem problem) {
+	public static void AP_interleaved(Problem problem) throws NoPlanException {
 		Plan plan = null;
 		State s = problem.getInitialState();
 		while (!Helper.satifies(s, problem.getGoalState())) {
@@ -66,7 +67,7 @@ public class Actor {
 		}
 	}
 
-	public static void AP_mixed(Problem problem) {
+	public static void AP_mixed(Problem problem) throws NoPlanException {
 		int n = 5, i = 0;
 		State s = problem.getInitialState();
 		while (!Helper.satifies(s, problem.getGoalState())) {
@@ -76,7 +77,7 @@ public class Actor {
 			Plan plan = Planner.solve(problem, planning);
 			Experiment.totalPlanningTime += TimeUnit.MILLISECONDS.toMillis(Math.abs(sTime - System.currentTimeMillis()));
 			// System.out.println(plan.toString());
-			while (i++ < n && Simulate(problem, s, plan, problem.getGoalState())) {
+			while (i++ < n && Simulate(problem, s, plan, problem.getGoalState()) && plan.getActions().size() > 0) {
 				Experiment.actionCount++;
 				sTime = System.currentTimeMillis();
 				s = problem.getSystem().transition(s, plan.pop());

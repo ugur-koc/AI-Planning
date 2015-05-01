@@ -155,7 +155,7 @@ public class RobotGridLayout extends Problem {
 		return candidateAction;
 	}
 
-	private static double distance(int c1, int d1) {
+	public static double distance(int c1, int d1) {
 		int[] C1 = Co_ordinate(c1), D1 = Co_ordinate(d1);
 		return Math.pow(C1[0] - D1[0], 2) + Math.pow(C1[1] - D1[1], 2);
 	}
