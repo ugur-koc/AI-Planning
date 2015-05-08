@@ -6,9 +6,12 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-import test.problems.RobotGridLayout;
+import planning.utility.Helper;
+import test.problems.RobotWithTrain;
 
 import com.google.common.collect.Sets;
+
+import exceptions.NoPlanException;
 
 public class StateTransitionSystem {
 
@@ -31,7 +34,8 @@ public class StateTransitionSystem {
 		this.actions = enumerateAllActions(actions);
 	}
 
-	public State transition(State s, Action a) {
+	public State transition(State s, Action a) throws NoPlanException {
+		if (!Helper.satifies(s, a.getPreconditions())) { throw new NoPlanException("Transition:Action is not applicable!"); }
 		State newState = new State(s);
 		Random random = new Random();
 		int count = 0, bound = random.nextInt(10000) + 10000000;
@@ -77,9 +81,9 @@ public class StateTransitionSystem {
 					int toIndx = Integer.parseInt((String) parameters.get(2).get("index"));
 					if (parameters.get(0).getName().equals("r1")
 							&& ((action.getName().equals("right") && fromIndx + 1 == toIndx)
-									|| (action.getName().equals("down") && fromIndx - RobotGridLayout.boardSize == toIndx)
+									|| (action.getName().equals("down") && fromIndx - RobotWithTrain.boardSize == toIndx)
 									|| (action.getName().equals("left") && fromIndx - 1 == toIndx) || (action.getName().equals(
-									"up") && fromIndx + RobotGridLayout.boardSize == toIndx)))
+									"up") && fromIndx + RobotWithTrain.boardSize == toIndx)))
 						allActions.add(new Action(action, parameters));
 				} // Robot motion specific code end
 				else allActions.add(new Action(action, parameters));

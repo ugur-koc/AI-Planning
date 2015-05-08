@@ -3,7 +3,7 @@ package test;
 import org.junit.Test;
 
 import test.problems.Coloring;
-import test.problems.RobotGridLayout;
+import test.problems.RobotWithTrain;
 import acting.Actor;
 
 public class ActingTests {
@@ -25,16 +25,16 @@ public class ActingTests {
 
 	@Test
 	public void testActor4() throws Exception {
-		Actor.act(new RobotGridLayout(4, 4), "AP_lazy", "AStar", 0);
+		Actor.act(new RobotWithTrain(4, 4), "AP_lazy", "AStar", 0);
 	}
 
 	@Test
 	public void testActor5() throws Exception {
-		Actor.act(new RobotGridLayout(6, 2), "AP_interleaved", "DFS", 0);
+		Actor.act(new RobotWithTrain(6, 2), "AP_interleaved", "DFS", 0);
 	}
 
 	@Test
 	public void testActor6() throws Exception {
-		Actor.act(new RobotGridLayout(6, 2), "AP_mixed", "AStar", 0);
+		Actor.act(new RobotWithTrain(6, 2), "AP_mixed", "AStar", 0);
 	}
 }

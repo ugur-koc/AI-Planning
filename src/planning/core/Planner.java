@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import planning.utility.Helper;
-import test.problems.RobotGridLayout;
+import test.problems.RobotWithTrain;
 import exceptions.NoPlanException;
 
 public class Planner {
@@ -105,7 +105,7 @@ public class Planner {
 		PlanningObject robot = g.getVariables().get(0).getParameters().get(0);
 		String destCell = (String) robot.get("pos");
 		String d = s.getValueOf("pos", robot.getName());
-		return (int) RobotGridLayout.distance(Integer.parseInt(destCell.substring(1)), Integer.parseInt(d.substring(1)));
+		return (int) RobotWithTrain.distance(Integer.parseInt(destCell.substring(1)), Integer.parseInt(d.substring(1)));
 	}
 }
 

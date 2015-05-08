@@ -1,5 +1,5 @@
-Robots={r1,r2}
-Cells={c1,c2, ..., c16}
+Robots={r1, ...,rn} where n=2 or n=4
+Cells={c1,c2, ..., cm} where 36<=m<=64
 Statuses={empty,occupied}
 Bool={yes,no}
 B=RobotsUCellsUStatusesUIndexes
@@ -25,6 +25,5 @@ Eff:pos(r)=c2,stat(c2)=occupied, stat(c2)=empty
 .
 .
 
-
-s0={...}
-g={...}
+s0={pos(r1)=cm, ...}
+g={pos(r1)=cm}

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Random;
 import java.util.Set;
 
 import exceptions.NoPlanException;
@@ -15,13 +14,13 @@ import planning.core.State;
 import planning.core.StateTransitionSystem;
 import planning.core.Variable;
 
-public class RobotGridLayout extends Problem {
+public class RobotWithTrain extends Problem {
 	public static int boardSize;
+	HashMap<String, Set<PlanningObject>> B = new HashMap<String, Set<PlanningObject>>();
+	ArrayList<String> occupiedCells = new ArrayList<String>();
 
-	public RobotGridLayout(int boardSize, int robotCount) {
-		RobotGridLayout.boardSize = boardSize;
-		Random random = new Random();
-		HashMap<String, Set<PlanningObject>> B = new HashMap<String, Set<PlanningObject>>();
+	public RobotWithTrain(int boardSize, int robotCount) {
+		RobotWithTrain.boardSize = boardSize;
 		String[] names = { "Robots", "Cells", "Status", "Indexes", "Bool" }, status = { "empty", "occupied" };
 
 		Set<PlanningObject> robotSet = new HashSet<PlanningObject>();
@@ -62,7 +61,7 @@ public class RobotGridLayout extends Problem {
 		Variable redge = new Variable("redge", 1, new String[] { names[1] });
 		varDefs.add(redge);
 
-		ArrayList<Action> actionsDef = new ArrayList<Action>();// TODO actions NOK
+		ArrayList<Action> actionsDef = new ArrayList<Action>();
 		Action up = new Action("up", 3, new String[] { names[0], names[1], names[1] });
 		up.addPreCondition(stat, "empty", 2);
 		up.addPreCondition(pos, "placeholder_2", 0);
@@ -105,17 +104,22 @@ public class RobotGridLayout extends Problem {
 
 		StateTransitionSystem robotSystem = new StateTransitionSystem(actionsDef, B);
 		State s0 = new State(robotSystem.enumerateAllVariables(varDefs));
-		
-		ArrayList<String> occupiedCells = new ArrayList<String>();
+
 		String cell;
 		Iterator<PlanningObject> iterator = robotSystem.getObjectMap().get("Robots").iterator();
 		while (iterator.hasNext()) {
 			PlanningObject po = iterator.next();
-			if (po.getName().equals("r1")) {
-				cell = "c1";
-			} else do {
-				cell = "c" + (random.nextInt(boardSize * boardSize - 2) + 1);
-			} while (occupiedCells.contains(cell));
+			if (po.getName().equals("r2")) {
+				cell = "c44";
+			} else if (po.getName().equals("r3")) {
+				cell = "c45";
+			} else if (po.getName().equals("r4")) {
+				cell = "c46";
+			} else if (po.getName().equals("r5")) {
+				cell = "c38";
+			} else if (po.getName().equals("r6")) {
+				cell = "c30";
+			} else cell = "c28";
 			po.addAttribute("pos", cell);
 			occupiedCells.add(cell);
 		}
@@ -126,7 +130,7 @@ public class RobotGridLayout extends Problem {
 			pObject.addAttribute("status", occupiedCells.contains(pObject.getName()) ? "occupied" : "empty");
 		}
 
-		ArrayList<Variable> gVariables = new ArrayList<Variable>(); // TODO
+		ArrayList<Variable> gVariables = new ArrayList<Variable>();
 		PlanningObject p = new PlanningObject(names[0], "r1");
 		p.addAttribute("pos", "c" + boardSize * boardSize);
 		gVariables.add(new Variable(new Variable("pos", 1, new String[] { "Robots" }), p));
@@ -167,10 +171,30 @@ public class RobotGridLayout extends Problem {
 		return Math.pow(C1[0] - D1[0], 2) + Math.pow(C1[1] - D1[1], 2);
 	}
 
+	public static double stepCount(int c1, int d1) {
+		int[] C1 = Co_ordinate(c1), D1 = Co_ordinate(d1);
+		return Math.abs(C1[0] - D1[0]) + Math.abs(C1[1] - D1[1]);
+	}
+
 	private static int[] Co_ordinate(int d1) {
-		int y = 1 + d1 / RobotGridLayout.boardSize;
-		while (d1 > RobotGridLayout.boardSize)
-			d1 -= RobotGridLayout.boardSize;
+		int y = 1 + d1 / RobotWithTrain.boardSize;
+		while (d1 > RobotWithTrain.boardSize)
+			d1 -= RobotWithTrain.boardSize;
 		return new int[] { d1, y };
+	}
+
+	public static PlanningObject getRobot(Set<PlanningObject> set, String robotName) {
+		for (PlanningObject planningObject : set)
+			if (planningObject.getName().equals(robotName)) return planningObject;
+		return null;
+	}
+
+	@Override
+	public String toString() {
+		String result = "";
+		for (int i = 1; i <= boardSize * boardSize; i++)
+			result += ((getInitialState().getValueOf("status", "c" + i).equals("occupied")) ? "r " : "  ")
+					+ ((i % boardSize == 0) ? "\n" : "");
+		return result;
 	}
 }
